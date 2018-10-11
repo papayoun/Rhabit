@@ -4,19 +4,20 @@
 \alias{langevinUD}
 \title{Obtaining UD estimate of an animal using Langevin movement model}
 \usage{
-langevinUD(locs, times, ID = NULL, gradsArray, withspeed = TRUE)
+langevinUD(locs, times, ID = NULL, grad_array, with_speed = TRUE)
 }
 \arguments{
-\item{locs}{Matrix of locations}
+\item{locs}{Matrix of locations having size, say, n}
 
-\item{times}{Vector of observation times}
+\item{times}{Vector of observation times, must be of length n}
 
-\item{ID}{Vector of track identifiers}
+\item{ID}{Vector of track identifiers, must be of length n}
 
-\item{gradsArray}{Array of gradients of covariates, evaluated at
-the locations of the observations}
+\item{grad_array}{Array of gradients of covariates, evaluated at
+the locations of the observations, must be 3d array of dim(n, 2, J)
+where J is the amount of covariates}
 
-\item{withspeed}{Logical. If TRUE, the speed parameter is estimated
+\item{with_speed}{Logical. If TRUE, the speed parameter is estimated
 Other wise it is set to one}
 }
 \value{
