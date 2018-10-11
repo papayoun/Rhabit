@@ -13,12 +13,12 @@
 #' @return A list of: est, the vector of estimates, and var, the
 #' covariance matrix of the estimates.
 #'
-#'
+#'@export
 langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   if (!(inherits(locs, "matrix") & typeof(locs) %in% c("double", "integer")))
     stop("locs must be a numeric matrix")
   n <- nrow(locs)
-  if (inherits(grad_array, matrix)){
+  if (inherits(grad_array, "matrix")){
     grad_array <- array(grad_array, dim = c(n, 2, 1))
     warning("gradsArray was a matrix, and has been transformed to an array")
   }
@@ -41,7 +41,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   Y <- loc_increment / sq_time_lag
   nu_hat_var <- solve (t(grad_mat * time_lag) %*% grad_mat)
   DF <- length(Y) - J
-  if(DF <= 4){
+  if (DF <= 4){
     stop("nrow(locs) must be strictly larger than 2 + dim(grad_array)[3] / 2")
   }
   nu_hat <- nu_hat_var %*% t(grad_mat) %*% loc_increment;
@@ -57,11 +57,13 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
     beta_hat <- nu_hat
     beta_hat_var <- nu_hat_var
   }
-  conf_interval <- t(sapply(1:length(beta_hat), function(j){
+  conf_interval_beta <- t(sapply(1:length(beta_hat), function(j){
     beta_hat[j] + c(1, -1) * stats::qnorm(0.025) *  sqrt(beta_hat_var[j, j])
   }))
+  conf_interval_gamma2 <- gamma2_hat * DF / qchisq(c(0.975, 0.025), DF)
+  conf_interval <- rbind(conf_interval_beta, conf_interval_gamma2)
   rownames(beta_hat_var) <- colnames(beta_hat_var) <- paste0("beta", 1:J)
-  rownames(conf_interval) <- rownames(beta_hat_var)
+  rownames(conf_interval) <- c(rownames(beta_hat_var), "gamma2")
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
               betaHatVariance = beta_hat_var, betaHat95CI = conf_interval))
 }

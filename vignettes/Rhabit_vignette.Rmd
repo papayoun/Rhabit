@@ -2,7 +2,7 @@
 title: "Rhabit package for the Langevin movement model"
 author: "Pierre Gloaguen"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::html_document
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,3 +17,46 @@ knitr::opts_chunk$set(
 ```
 
 This vignette aims at showing aims at showing how to to use the Rhabit package.
+
+```{r libraries}
+library(Rhabit)
+library(abind)
+```
+
+
+```{r loadingData}
+data("covariates", package = "RLangevinMM")
+data("tracks", package = "RLangevinMM")
+```
+
+```{r}
+n_obs <- 500
+sel <- floor(seq(1, nrow(tracks), length = n_obs))
+locs <- as.matrix(tracks[sel, c("x", "y")])
+times <- tracks[sel, "t"]
+xgrid <- covariates[[1]]$x
+ygrid <- covariates[[1]]$y
+cov_array <- do.call(function(...) abind(..., along = 3),
+                     lapply(covariates, function(cov) cov$z))
+grad_array <- RLangevinMM::covGradAtLocs(locs, xgrid, ygrid, 
+                                         cov_array, lag_inter = 2)
+```
+
+```{r}
+(est <- langevinUD(locs, times, grad_array = grad_array))
+```
+
+# Try with a BB
+
+```{r estonBB}
+set.seed(1)
+n_obs <- 500
+sel <- floor(seq(1, nrow(tracks), length = n_obs))
+times <- tracks[sel, "t"]
+locs <- sapply(1:2, function(i) 
+  cumsum(c(tracks[1, i], rnorm(n_obs - 1, 0, sqrt(0.2 * diff(times)[1])))))
+grad_array <- RLangevinMM::covGradAtLocs(locs, xgrid, ygrid, 
+                                         cov_array, lag_inter = 2)
+(est <- langevinUD(locs, times, grad_array = grad_array))
+```
+
