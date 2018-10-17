@@ -4,17 +4,17 @@
 \alias{interpCov}
 \title{Interpolate 2D covariate}
 \usage{
-interpCov(locs, xgrid, ygrid, cov_mat)
+interpCov(locs, x_grid, y_grid, cov_mat)
 }
 \arguments{
 \item{locs}{Point where the covariate should be interpolated}
 
-\item{xgrid}{Grid on which the covariate is known}
+\item{x_grid}{Grid on which the covariate is known}
 
-\item{ygrid}{Grid on which the covariate is known}
+\item{y_grid}{Grid on which the covariate is known}
 
 \item{cov_mat}{Matrix of values of the covariate at the points given by
-xgrid and ygrid.}
+x_grid and y_grid.}
 }
 \value{
 Interpolated value of the covariate at the point xy.

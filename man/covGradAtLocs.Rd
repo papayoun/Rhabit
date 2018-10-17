@@ -4,24 +4,22 @@
 \alias{covGradAtLocs}
 \title{Gradient of covariate field}
 \usage{
-covGradAtLocs(locs, xgrid, ygrid, cov_array, lag_inter = 10,
-  grad_fun = NULL)
+covGradAtLocs(locs, cov_list = NULL, grad_fun = NULL)
 }
 \arguments{
 \item{locs}{Matrix of locations where the gradient should be evaluated}
 
-\item{xgrid}{Grid on which the covariates are known}
-
-\item{ygrid}{Grid on which the covariates are known}
-
-\item{cov_array}{Array of values of the covariates at the points given by
-xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).}
-
-\item{lag_inter}{integer specifying which points of cov_array will be used
-for the interpolation, default to 10}
+\item{cov_list}{List of J (number of covariates) "raster like" elements.
+A raster like element is a 3 elements list with named elements
+1) "x" a vector of increasing x locations (at which the covariate is sampled)
+2) "y" a vector of increasing y locations (at which the covariate is sampled)
+3) "z" a size(x)*size(y) matrix giving covariate values at location (x, y)}
 
 \item{grad_fun}{Optional list of functions taking a 2d vector and returning
 a two 2d vector for the gradient}
+
+\item{lag_inter}{integer specifying which points of cov_array will be used
+for the interpolation, default to 10}
 }
 \value{
 Three-dimensional array of gradients of covariate fields.

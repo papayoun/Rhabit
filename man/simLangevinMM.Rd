@@ -4,8 +4,8 @@
 \alias{simLangevinMM}
 \title{Simulate from the Langevin movement model}
 \usage{
-simLangevinMM(beta, gamma2 = 1, times, loc0, xgrid, ygrid, cov_array,
-  lag_inter = 10, grad_fun = NULL)
+simLangevinMM(beta, gamma2 = 1, times, loc0, cov_list = NULL,
+  grad_fun = NULL)
 }
 \arguments{
 \item{beta}{Vector of resource selection coefficients}
@@ -17,18 +17,18 @@ time step between each, such that the Euler scheme is valid}
 
 \item{loc0}{Vector of coordinates (x,y) of initial location}
 
-\item{xgrid}{Grid on which the covariates are known}
+\item{cov_list}{List of J (number of covariates) "raster like" elements.
+A raster like element is a 3 elements list with named elements
+1) "x" a vector of increasing x locations (at which the covariate is sampled)
+2) "y" a vector of increasing y locations (at which the covariate is sampled)
+3) "z" a size(x)*size(y) matrix giving covariate values at location (x, y)}
 
-\item{ygrid}{Grid on which the covariates are known}
-
-\item{cov_array}{Array of values of the covariates at the points given by}
+\item{grad_fun}{Optional list of functions taking a 2d vector and returning
+a two 2d vector for the gradient}
 
 \item{lag_inter}{integer specifying which points of cov_array will be used
 for the interpolation, default to 10
 xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).}
-
-\item{grad_fun}{Optional list of functions taking a 2d vector and returning
-a two 2d vector for the gradient}
 }
 \description{
 This function is based on the Euler approximation.
