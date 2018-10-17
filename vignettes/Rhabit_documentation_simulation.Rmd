@@ -1,0 +1,144 @@
+---
+title: "RLangevin_MM vignette"
+author: "Pierre Gloaguen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  message = F, error = F, warning = F,
+  comment = "NA"
+)
+```
+
+```{r loadingPackage}
+library(Rhabit)
+library(viridis)
+library(ggplot2)
+library(gridExtra)
+library(abind)
+```
+
+# Simulating covariate fields
+
+Here is an example to simulate covariates.
+First, setting simulation parameters
+
+```{r simCovParams}
+set.seed(1)# repeatability
+lim <- c(-15, 15, -15, 15) # limits of map
+resol <- 0.1 # grid resolution
+rho <- 4; nu <- 1.5; sigma2 <- 10# Matern covariance parameters
+mean_function <- function(z){# mean function
+  -log(3 + sum(z^2))
+}
+J <- 2 # number of covariates
+```
+
+Then, simulating
+
+```{r simCovariates, eval = F}
+covariates <- replicate(J, 
+                        simSpatialCov(lim, nu, rho, sigma2, resol = resol,
+                                      mean_function = mean_function,
+                                      raster_like = T),
+                        simplify = F)
+```
+
+The resulting covariates can be loaded in R directly after loading the package:
+
+```{r loadingCovariates, echo = T, message=FALSE}
+data("covariates", package = "Rhabit")
+```
+
+
+## Covariates
+
+```{r plot}
+ggopts <- theme_light()+theme(text = element_text(size = 20),
+                axis.text = element_blank(),
+                axis.title = element_blank(),
+                legend.key.height= unit(3, "line"),
+                strip.background = element_rect(fill="white",colour = "grey") ,
+                strip.text = element_text(size = 25, color = "black"))
+levels <- factor(paste("Covariate", 1:J), levels = paste("Covariate", 1:J))
+cov_df <- do.call(rbind.data.frame,
+                 lapply(1:J,
+                        function(j){
+                          rasterToGGplot(covariates[[j]], levels[j])
+                        }))
+ggplot(cov_df, aes(x,y)) + geom_raster(aes(fill = val)) +
+  coord_equal() + scale_fill_viridis(name = "Value") + facet_wrap(level~.) +
+  ggopts
+```
+
+
+# Plotting UD
+
+```{r UD}
+beta_true <- c(1, 1)
+ud_rast <- covariates[[1]] # initialization
+dx <- diff(ud_rast$x)[1]
+dy <- diff(ud_rast$x)[1]
+ud_rast$z <- exp(Reduce("+",
+                    lapply(1:J, function(j)
+                      dx * dy * beta_true[j] * covariates[[j]]$z)))
+ud_rast$z <- ud_rast$z / sum(ud_rast$z)
+ud_df <- rasterToGGplot(ud_rast)
+ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
+  coord_equal() + scale_fill_viridis(name = "Value") +
+  ggopts
+```
+
+
+# Simulation
+
+Setting simulation parameters:
+
+```{r simLangevinMM, eval=F}
+xgrid <- covariates[[1]]$x
+ygrid <- covariates[[1]]$y
+t_final <- 200
+n_obs <- 20001
+times <- seq(0, t_final, length.out = n_obs)
+```
+
+The first step is to transform the list to an array:
+
+```{r covToArray}
+cov_array <- do.call(function(...) abind(..., along = 3),
+                     lapply(covariates, function(cov){
+                       cov$z
+                     }))
+```
+
+```{r simulTracks, eval = F}
+set.seed(1) #repeatability
+tracks <- simLangevinMM(beta = beta_true, gamma2 = 0.2,
+                        times = times, loc0 = c(-5, 5),
+                        xgrid = xgrid, ygrid = ygrid,
+                        cov_array = cov_array, lag_inter = 3)
+```
+
+These simulated tracks are a data set that can be loaded
+
+```{r loadTracks}
+data("tracks", package = "Rhabit")
+```
+
+And can be plotted
+
+```{r}
+ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
+  coord_equal() + scale_fill_viridis(name = "Value") +
+  geom_path(data = tracks[, 1:2]) +
+  ggopts
+```
+

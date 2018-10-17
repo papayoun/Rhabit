@@ -60,7 +60,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   conf_interval_beta <- t(sapply(1:length(beta_hat), function(j){
     beta_hat[j] + c(1, -1) * stats::qnorm(0.025) *  sqrt(beta_hat_var[j, j])
   }))
-  conf_interval_gamma2 <- gamma2_hat * DF / qchisq(c(0.975, 0.025), DF)
+  conf_interval_gamma2 <- gamma2_hat * DF / stats::qchisq(c(0.975, 0.025), DF)
   conf_interval <- rbind(conf_interval_beta, conf_interval_gamma2)
   rownames(beta_hat_var) <- colnames(beta_hat_var) <- paste0("beta", 1:J)
   rownames(conf_interval) <- c(rownames(beta_hat_var), "gamma2")

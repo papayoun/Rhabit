@@ -3,7 +3,7 @@ Type: Package
 Title: Estimation of animals habit map using the Langevin movement model
 Version: 0.1.0
 Author: Pierre Gloaguen and Théo Michelot
-Maintainer: Pierre Gloagune <pierre.gloaguen@agroparistech.fr>
+Maintainer: Pierre Gloaguen <pierre.gloaguen@agroparistech.fr>
 Description: Estimation of animals habit map using the Langevin movement model.
 License: No license
 Encoding: UTF-8

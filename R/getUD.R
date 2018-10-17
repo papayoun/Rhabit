@@ -5,7 +5,7 @@
 #' elements. It is for the moment supposed that the grid is regular and
 #' shared by all elemebts of covariates
 #' @param beta beta values, must be the same length as covariates
-#' @log logical: get log value? by default = F
+#' @param log logical: get log value? by default = F
 #'
 #' @return a raster-like list
 #' @export
