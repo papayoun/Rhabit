@@ -25,8 +25,8 @@ library(abind)
 
 
 ```{r loadingData}
-data("covariates", package = "RLangevinMM")
-data("tracks", package = "RLangevinMM")
+data("covariates", package = "Rhabit")
+data("tracks", package = "Rhabit")
 ```
 
 ```{r}
@@ -38,8 +38,7 @@ xgrid <- covariates[[1]]$x
 ygrid <- covariates[[1]]$y
 cov_array <- do.call(function(...) abind(..., along = 3),
                      lapply(covariates, function(cov) cov$z))
-grad_array <- RLangevinMM::covGradAtLocs(locs, xgrid, ygrid, 
-                                         cov_array, lag_inter = 2)
+grad_array <- covGradAtLocs(locs, xgrid, ygrid, cov_array, lag_inter = 2)
 ```
 
 ```{r}
@@ -55,8 +54,7 @@ sel <- floor(seq(1, nrow(tracks), length = n_obs))
 times <- tracks[sel, "t"]
 locs <- sapply(1:2, function(i) 
   cumsum(c(tracks[1, i], rnorm(n_obs - 1, 0, sqrt(0.2 * diff(times)[1])))))
-grad_array <- RLangevinMM::covGradAtLocs(locs, xgrid, ygrid, 
-                                         cov_array, lag_inter = 2)
+grad_array <- covGradAtLocs(locs, xgrid, ygrid, cov_array, lag_inter = 2)
 (est <- langevinUD(locs, times, grad_array = grad_array))
 ```
 
