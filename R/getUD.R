@@ -17,7 +17,7 @@ getUD <- function(covariates, beta, log = F){
   ud_rast$z <- Reduce("+",
                       lapply(1:J, function(j)
                         dx * dy * beta[j] * covariates[[j]]$z))
-  if(!log){
+  if (!log){
     ud_rast$z <- exp(ud_rast$z)
     ud_rast$z <- ud_rast$z / sum(ud_rast$z)# Normalization
   }

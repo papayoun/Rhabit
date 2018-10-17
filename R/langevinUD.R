@@ -46,8 +46,8 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   }
   nu_hat <- nu_hat_var %*% t(grad_mat) %*% loc_increment;
   gamma2_hat <- NULL
+  predictor <- sq_time_lag * grad_mat %*% nu_hat
   if (with_speed){
-    predictor <- sq_time_lag * grad_mat %*% nu_hat
     gamma2_hat <- colSums( (Y -  predictor) ^ 2 ) / DF
     beta_hat <- nu_hat / gamma2_hat * (DF - 2) / DF
     beta_hat_var <- (2 * beta_hat %*% t(beta_hat) / (DF - 4)
@@ -64,6 +64,8 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   conf_interval <- rbind(conf_interval_beta, conf_interval_gamma2)
   rownames(beta_hat_var) <- colnames(beta_hat_var) <- paste0("beta", 1:J)
   rownames(conf_interval) <- c(rownames(beta_hat_var), "gamma2")
+  r_square <- 1 - colSums( (Y -  predictor) ^ 2) / sum(Y ^ 2)
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
-              betaHatVariance = beta_hat_var, betaHat95CI = conf_interval))
+              betaHatVariance = beta_hat_var, betaHat95CI = conf_interval,
+              R2 = r_square))
 }

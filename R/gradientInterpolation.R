@@ -30,14 +30,16 @@ interpCov <- function(locs, x_grid, y_grid, cov_mat) {
 #' 3) "z" a size(x)*size(y) matrix giving covariate values at location (x, y)
 #' @param grad_fun Optional list of functions taking a 2d vector and returning
 #' a two 2d vector for the gradient
+#' @param check logical check wether cov_list and grad_fun have the right format,
+#' default to TRUE
 #' @return Gradient of the log-UD in loc.
 gradLogUD <- function(beta, loc, cov_list = NULL, grad_fun = NULL, check = T) {
-  if(check){
+  if (check){
     checkCovGrad(cov_list, grad_fun)
   }
   J <- length(beta)
-  grad_vals <- sapply(1:J, function(j)
-    if(is.null(grad_fun[[j]])){
+  grad_val <- sapply(1:J, function(j)
+    if (is.null(grad_fun[[j]])){
       x_grid <- cov_list[[j]]$x
       y_grid <- cov_list[[j]]$y
       cov_mat <- cov_list[[j]]$z
@@ -47,7 +49,7 @@ gradLogUD <- function(beta, loc, cov_list = NULL, grad_fun = NULL, check = T) {
     else
       return(grad_fun[[j]](loc))
     )
-  return(grad_vals %*% beta)
+  return(grad_val)
 }
 
 #' Gradient of covariate field
@@ -59,8 +61,6 @@ gradLogUD <- function(beta, loc, cov_list = NULL, grad_fun = NULL, check = T) {
 #' 1) "x" a vector of increasing x locations (at which the covariate is sampled)
 #' 2) "y" a vector of increasing y locations (at which the covariate is sampled)
 #' 3) "z" a size(x)*size(y) matrix giving covariate values at location (x, y)
-#' @param lag_inter integer specifying which points of cov_array will be used
-#' for the interpolation, default to 10
 #' @param grad_fun Optional list of functions taking a 2d vector and returning
 #' a two 2d vector for the gradient
 #' @return Three-dimensional array of gradients of covariate fields.
@@ -72,11 +72,14 @@ covGradAtLocs <- function(locs, cov_list = NULL, grad_fun = NULL) {
   J <- length(cov_list)
   grad_array <- do.call(function(...) abind::abind(..., along = 3),
                         lapply(1:J, function(j){
-                          if(is.null(grad_fun[[j]])){
-                            x_grid <- cov_list[[j]]$x
-                            y_grid <- cov_list[[j]]$y
-                            cov_mat <- cov_list[[j]]$z
+                          if (is.null(grad_fun[[j]])){
+                            covar <- cov_list[[j]]
                             return(t(apply(locs, 1, function(x){
+                              cov_list_tmp <- getGridZoom(covar,
+                                                          x0 = x)
+                              x_grid <- cov_list_tmp$x
+                              y_grid <- cov_list_tmp$y
+                              cov_mat <- cov_list_tmp$z
                               nloptr::nl.grad(fn = interpCov, x0 = x,
                                               x_grid = x_grid,
                                               y_grid = y_grid,

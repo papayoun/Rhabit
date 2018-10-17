@@ -6,3 +6,5 @@ inst/doc
 *.Rproj
 vignettes/*.tex
 vignettes/*.pdf
+vignettes/beta_*.R
+vignettes/simulated_data/*

@@ -156,81 +156,81 @@ ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
 
 # Estimation
 
-We here perform the estimation on a subsample of 500 points (subsampled
-at $\Delta = 0.4$).
+<!-- We here perform the estimation on a subsample of 500 points (subsampled -->
+<!-- at $\Delta = 0.4$). -->
 
-```{r, subsampling, echo = F}
-n_obs <- 500
-sel <- floor(seq(1, nrow(tracks), length = n_obs))
-locs <- as.matrix(tracks[sel, c("x", "y")])
-times <- tracks[sel, "t"]
-```
+<!-- ```{r, subsampling, echo = F} -->
+<!-- n_obs <- 500 -->
+<!-- sel <- floor(seq(1, nrow(tracks), length = n_obs)) -->
+<!-- locs <- as.matrix(tracks[sel, c("x", "y")]) -->
+<!-- times <- tracks[sel, "t"] -->
+<!-- ``` -->
 
-We define a `matrix` named `locs` with the position, and a `vector` times
-with the corresponding sampling times
-```{r locsTimes}
-head(locs)
-dim(locs)
-head(times)
-```
+<!-- We define a `matrix` named `locs` with the position, and a `vector` times -->
+<!-- with the corresponding sampling times -->
+<!-- ```{r locsTimes} -->
+<!-- head(locs) -->
+<!-- dim(locs) -->
+<!-- head(times) -->
+<!-- ``` -->
 
-An important thing to do is, given the covariates, to define a gradient array,
-giving the approximate gradient at sampled points.
+<!-- An important thing to do is, given the covariates, to define a gradient array, -->
+<!-- giving the approximate gradient at sampled points. -->
 
-We first define the three important arguments
+<!-- We first define the three important arguments -->
 
-```{r definingCovArray}
-xgrid <- covariates[[1]]$x # x points for the grid
-ygrid <- covariates[[1]]$y # y points
-cov_array <- do.call(function(...) abind(..., along = 3),
-                     lapply(covariates, function(cov) cov$z))
-# Gathers covariates together in a 3d array. Each slice is a covariate
-dim(cov_array)
-```
+<!-- ```{r definingCovArray} -->
+<!-- xgrid <- covariates[[1]]$x # x points for the grid -->
+<!-- ygrid <- covariates[[1]]$y # y points -->
+<!-- cov_array <- do.call(function(...) abind(..., along = 3), -->
+<!--                      lapply(covariates, function(cov) cov$z)) -->
+<!-- # Gathers covariates together in a 3d array. Each slice is a covariate -->
+<!-- dim(cov_array) -->
+<!-- ``` -->
 
-The `covGradAtLocs` does the rest by computing the gradient of covariates at 
-locations given by data. The interpolation is done using the `nloptr` library.
+<!-- The `covGradAtLocs` does the rest by computing the gradient of covariates at  -->
+<!-- locations given by data. The interpolation is done using the `nloptr` library. -->
 
-The result is a 3d array. Each slice is for a covariate, each row is for 
-a location, and it has 2 columns (one per coordinate)
+<!-- The result is a 3d array. Each slice is for a covariate, each row is for  -->
+<!-- a location, and it has 2 columns (one per coordinate) -->
 
-```{r definingGradArray}
-grad_array <- Rhabit::covGradAtLocs(locs, xgrid, ygrid, 
-                                         cov_array, lag_inter = 2)
-dim(grad_array)
-```
+<!-- ```{r definingGradArray} -->
+<!-- grad_array <- Rhabit::covGradAtLocs(locs, xgrid, ygrid,  -->
+<!--                                          cov_array, lag_inter = 2) -->
+<!-- dim(grad_array) -->
+<!-- ``` -->
 
-From that, one can has all the elements to use the main function
+<!-- From that, one can has all the elements to use the main function -->
 
-```{r}
-est <- Rhabit::langevinUD(locs, times, grad_array = grad_array)
-print(est)
-```
+<!-- ```{r} -->
+<!-- est <- Rhabit::langevinUD(locs, times, grad_array = grad_array) -->
+<!-- print(est) -->
+<!-- ``` -->
 
-Here, the 95% confidence intervals covers the true value, that were respectively
-1, 1, and $\gamma^2 = 0.2$.
+<!-- Here, the 95% confidence intervals covers the true value, that were respectively -->
+<!-- 1, 1, and $\gamma^2 = 0.2$. -->
 
-## Estimation on a Brownian bridge
+<!-- ## Estimation on a Brownian bridge -->
 
-The precedent estimation basically compares a complicated model to a null hypothesis,
-the brownian motion. 
+<!-- The precedent estimation basically compares a complicated model to a null hypothesis, -->
+<!-- the brownian motion.  -->
 
-In this section, we show that fitting the Langevin movement model to a Brownian
-motion leads to estimated values non significantly different than 0.
+<!-- In this section, we show that fitting the Langevin movement model to a Brownian -->
+<!-- motion leads to estimated values non significantly different than 0. -->
 
-```{r estonBB}
-set.seed(1)# repeatability
-n_obs <- 500
-sel <- floor(seq(1, nrow(tracks), length = n_obs))# selected times
-times <- tracks[sel, "t"]# using same time steps as beforre
-#Simulation of brownian motion
-# the 0.2 is the gamma^2 of the previous model
-locs <- sapply(1:2, function(i) 
-  cumsum(c(tracks[1, i], rnorm(n_obs - 1, 0, sqrt(0.2 * diff(times)[1])))))
-# compoutes covariates gradient on the new locations
-grad_array <- Rhabit::covGradAtLocs(locs, xgrid, ygrid, 
-                                         cov_array, lag_inter = 2)
-(est <- langevinUD(locs, times, grad_array = grad_array))
-```
+<!-- ```{r estonBB} -->
+<!-- set.seed(1)# repeatability -->
+<!-- n_obs <- 500 -->
+<!-- sel <- floor(seq(1, nrow(tracks), length = n_obs))# selected times -->
+<!-- times <- tracks[sel, "t"]# using same time steps as beforre -->
+<!-- #Simulation of brownian motion -->
+<!-- # the 0.2 is the gamma^2 of the previous model -->
+<!-- locs <- sapply(1:2, function(i)  -->
+<!--   cumsum(c(tracks[1, i], rnorm(n_obs - 1, 0, sqrt(0.2 * diff(times)[1]))))) -->
+<!-- # compoutes covariates gradient on the new locations -->
+<!-- grad_array <- Rhabit::covGradAtLocs(locs, xgrid, ygrid,  -->
+<!--                                          cov_array, lag_inter = 2) -->
+<!-- (est <- langevinUD(locs, times, grad_array = grad_array)) -->
+<!-- ``` -->
 
-The estimate $\beta$ are not significantly different than 0!
+<!-- The estimate $\beta$ are not significantly different than 0! -->

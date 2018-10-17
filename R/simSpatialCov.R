@@ -52,7 +52,7 @@ rasterToGGplot <- function(my_list, level = NULL){
   vals <- as.numeric(my_list$z)
   out <- data.frame(x = coords[, 1], y = coords[, 2], val = vals)
   if (!is.null(level)){
-    out$level = rep(level, nrow(out))
+    out$level <- rep(level, nrow(out))
   }
   return(out)
 }

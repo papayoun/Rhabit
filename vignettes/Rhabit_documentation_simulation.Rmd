@@ -58,7 +58,6 @@ The resulting covariates can be loaded in R directly after loading the package:
 data("covariates", package = "Rhabit")
 ```
 
-
 ## Covariates
 
 ```{r plot}
@@ -72,7 +71,7 @@ levels <- factor(paste("Covariate", 1:J), levels = paste("Covariate", 1:J))
 cov_df <- do.call(rbind.data.frame,
                  lapply(1:J,
                         function(j){
-                          rasterToGGplot(covariates[[j]], levels[j])
+                          Rhabit::rasterToGGplot(covariates[[j]], levels[j])
                         }))
 ggplot(cov_df, aes(x,y)) + geom_raster(aes(fill = val)) +
   coord_equal() + scale_fill_viridis(name = "Value") + facet_wrap(level~.) +
@@ -83,7 +82,7 @@ ggplot(cov_df, aes(x,y)) + geom_raster(aes(fill = val)) +
 # Plotting UD
 
 ```{r UD}
-beta_true <- c(1, 1)
+beta_true <- c(10, 8)
 ud_rast <- covariates[[1]] # initialization
 dx <- diff(ud_rast$x)[1]
 dy <- diff(ud_rast$x)[1]
@@ -102,29 +101,19 @@ ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
 
 Setting simulation parameters:
 
-```{r simLangevinMM, eval=F}
-xgrid <- covariates[[1]]$x
-ygrid <- covariates[[1]]$y
-t_final <- 200
-n_obs <- 20001
+```{r simLangevinMM}
+t_final <- 100
+n_obs <- 5001
 times <- seq(0, t_final, length.out = n_obs)
 ```
 
-The first step is to transform the list to an array:
-
-```{r covToArray}
-cov_array <- do.call(function(...) abind(..., along = 3),
-                     lapply(covariates, function(cov){
-                       cov$z
-                     }))
-```
+Then, one can simulate using cov_list
 
 ```{r simulTracks, eval = F}
 set.seed(1) #repeatability
 tracks <- simLangevinMM(beta = beta_true, gamma2 = 0.2,
-                        times = times, loc0 = c(-5, 5),
-                        xgrid = xgrid, ygrid = ygrid,
-                        cov_array = cov_array, lag_inter = 3)
+                        times = times, loc0 = c(0,0 ),
+                        cov_list = covariates)
 ```
 
 These simulated tracks are a data set that can be loaded
@@ -140,5 +129,16 @@ ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
   coord_equal() + scale_fill_viridis(name = "Value") +
   geom_path(data = tracks[, 1:2]) +
   ggopts
+```
+
+# Estimation
+
+```{r getCovArray, eval = F}
+locs <- as.matrix(tracks[, 1:2])
+grad_array <- covGradAtLocs(locs, cov_list = covariates)
+```
+
+```{r, eval = F}
+langevinUD(locs = locs, times = times, grad_array = grad_array)
 ```
 

@@ -19,6 +19,9 @@ A raster like element is a 3 elements list with named elements
 
 \item{grad_fun}{Optional list of functions taking a 2d vector and returning
 a two 2d vector for the gradient}
+
+\item{check}{logical check wether cov_list and grad_fun have the right format,
+default to TRUE}
 }
 \value{
 Gradient of the log-UD in loc.

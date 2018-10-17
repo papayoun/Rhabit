@@ -16,23 +16,48 @@
 #' 3) "z" a size(x)*size(y) matrix giving covariate values at location (x, y)
 #' @param grad_fun Optional list of functions taking a 2d vector and returning
 #' a two 2d vector for the gradient
-#' @param lag_inter integer specifying which points of cov_array will be used
-#' for the interpolation, default to 10
+#' @param silent logical, should simulation advancement be shown?
+#' @param keep_grad should gradient values at simulated points be kept?
+#' This avoids to use covGradAtLocs later on
 #' xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).
 #' @export
 simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
-                          cov_list = NULL, grad_fun = NULL) {
+                          cov_list = NULL, grad_fun = NULL, silent = F,
+                          keep_grad = F) {
   checkCovGrad(cov_list, grad_fun)
   nb_obs <- length(times)
   xy <- matrix(loc0, nb_obs, 2)
   dt <- diff(times)
+  J <- length(beta)
+  grad_array <- NULL
+  if (keep_grad){
+    grad_array <- matrix(ncol = 2 * J, nrow = nb_obs)
+    colnames(grad_array) <- paste(rep(paste0("grad_c", 1:J), rep(2, J)),
+                                  rep(c("x", "y"), J), sep = "_")
+  }
   for (t in 2:nb_obs) {
-    cat("\rSimulating Langevin process...", round(100 * t / nb_obs), "%")
-    grad <- gradLogUD(beta = beta, loc = xy[t - 1, ], cov_list = cov_list,
+    if (!silent)
+      cat("\rSimulating Langevin process...", round(100 * t / nb_obs), "%")
+    cov_list_tmp <- lapply(cov_list, getGridZoom, x0 = xy[t - 1, ])
+    grad_val <- gradLogUD(beta = beta, loc = xy[t - 1, ],
+                          cov_list = cov_list_tmp,
                       grad_fun = grad_fun, check = F)
+    if (keep_grad)
+      grad_array[t - 1, ] <- as.numeric(grad_val)
+    grad <- grad_val %*% beta
     rand_part <- stats::rnorm(2, 0, sqrt(gamma2 * dt[t - 1]))
     xy[t, ] <- xy[t - 1, ] + 0.5 * grad * gamma2 * dt[t - 1] + rand_part
   }
-  cat("\n")
-  return(data.frame(x = xy[, 1], y = xy[, 2], t = times))
+  if (!silent)
+    cat("\n")
+  main_df <- data.frame(x = xy[, 1], y = xy[, 2], t = times)
+  if (keep_grad){
+    cov_list_tmp <- lapply(cov_list, getGridZoom, x0 = xy[nb_obs - 1, ])
+    grad_val <- gradLogUD(beta = beta, loc = xy[t - 1, ],
+                          cov_list = cov_list_tmp,
+                          grad_fun = grad_fun, check = F)
+    grad_array[nb_obs, ] <- as.numeric(grad_val)
+    main_df <- cbind.data.frame(main_df, grad_array)
+  }
+  return(main_df)
 }

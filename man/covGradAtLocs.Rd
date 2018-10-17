@@ -17,9 +17,6 @@ A raster like element is a 3 elements list with named elements
 
 \item{grad_fun}{Optional list of functions taking a 2d vector and returning
 a two 2d vector for the gradient}
-
-\item{lag_inter}{integer specifying which points of cov_array will be used
-for the interpolation, default to 10}
 }
 \value{
 Three-dimensional array of gradients of covariate fields.
