@@ -26,7 +26,8 @@ simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
                           keep_grad = F) {
   checkCovGrad(cov_list, grad_fun)
   nb_obs <- length(times)
-  xy <- matrix(loc0, nb_obs, 2)
+  xy <- matrix(NA, nb_obs, 2)
+  xy[1,] <- loc0
   dt <- diff(times)
   J <- length(beta)
   grad_array <- NULL
