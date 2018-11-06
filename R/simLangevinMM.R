@@ -42,7 +42,7 @@ simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
     cov_list_tmp <- lapply(cov_list, getGridZoom, x0 = xy[t - 1, ])
     grad_val <- gradLogUD(beta = beta, loc = xy[t - 1, ],
                           cov_list = cov_list_tmp,
-                      grad_fun = grad_fun, check = F)
+                          grad_fun = grad_fun, check = F)
     if (keep_grad)
       grad_array[t - 1, ] <- as.numeric(grad_val)
     grad <- grad_val %*% beta
