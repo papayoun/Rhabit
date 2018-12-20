@@ -38,7 +38,7 @@ simSpatialCov <- function(lim, nu, rho, sigma2, resol = 1,
   return(data.frame(x = coords[, 1], y = coords[, 2], val = vals))
 }
 
-#' Simulate random covariate field
+#' Transform (x,y,z) list to data.frame
 #'
 #' @name rasterToGGplot
 #' @param my_list A raster like list containing elements x, y, z

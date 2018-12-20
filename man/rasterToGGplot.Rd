@@ -2,7 +2,7 @@
 % Please edit documentation in R/simSpatialCov.R
 \name{rasterToGGplot}
 \alias{rasterToGGplot}
-\title{Simulate random covariate field}
+\title{Transform (x,y,z) list to data.frame}
 \usage{
 rasterToGGplot(my_list, level = NULL)
 }
@@ -17,5 +17,5 @@ rasterToGGplot(my_list, level = NULL)
 A data.frame (convenient for ggplot2)
 }
 \description{
-Simulate random covariate field
+Transform (x,y,z) list to data.frame
 }
