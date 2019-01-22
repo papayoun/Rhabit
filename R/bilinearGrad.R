@@ -46,7 +46,7 @@ bilinearGrad <- function(loc, cov_list) {
     cov_mat <- cov_list[[j]]$z
     
     # Extract values of coordinate around location of interest
-    cell <- gridCell(xy=loc, xgrid=x_grid, ygrid=y_grid, covmat=cov_mat)
+    cell <- gridCell(loc=loc, xgrid=x_grid, ygrid=y_grid, covmat=cov_mat)
     x <- cell$coords[1:2]
     y <- cell$coords[3:4]
     f <- cell$values
