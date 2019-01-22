@@ -66,3 +66,30 @@ bilinearGrad <- function(loc, cov_list) {
   
   return(grad_val)
 }
+
+#' Apply bilinearGrad to matrix of locations
+#' 
+#' @param locs Matrix of locations (with two columns)
+#' @param cov_list List of J (number of covariates) "raster like" elements.
+#' A raster like element is a 3 elements list with named elements
+#' 1) "x" a vector of increasing x locations (at which the covariate is sampled)
+#' 2) "y" a vector of increasing y locations (at which the covariate is sampled)
+#' 3) "z" a size(x)*size(y) matrix giving covariate values at location (x, y)
+#' 
+#' @return An array of dimension (n, 2, J), where n is the number of locations,
+#' and J is the number of covariates.
+#' 
+#' @export
+bilinearGradArray <- function(locs, cov_list) {
+  # Compute gradient at each location
+  grad <- unlist(lapply(1:nrow(locs), function(i) 
+    bilinearGrad(loc = locs[i,], cov_list = cov_list)))
+  
+  # Put into array with correct dimensions
+  gradarray <- array(grad, c(2, length(cov_list), nrow(locs)))
+  
+  # Swap dimensions to obtain an array with the correct format
+  gradarray <- aperm(gradarray, c(3, 1, 2))
+  
+  return(gradarray)
+}
