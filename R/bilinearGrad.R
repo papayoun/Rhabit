@@ -81,6 +81,9 @@ bilinearGrad <- function(loc, cov_list) {
 #' 
 #' @export
 bilinearGradArray <- function(locs, cov_list) {
+  if(!inherits(locs, "matrix"))
+    stop("'locs' must be a matrix")
+  
   # Compute gradient at each location
   grad <- unlist(lapply(1:nrow(locs), function(i) 
     bilinearGrad(loc = locs[i,], cov_list = cov_list)))
