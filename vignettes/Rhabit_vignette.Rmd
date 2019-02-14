@@ -12,6 +12,7 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
+rm(list = ls())
 knitr::opts_chunk$set(
   message = F, error = F, warning = F,
   comment = "NA"
@@ -151,6 +152,7 @@ grad_array <- do.call(function(...) abind(..., along = 3),
 locs <- as.matrix(tracks[, 1:2])
 times <- tracks[, "t"]
 grad_array <- covGradAtLocs(locs, cov_list = covariates)
+grad_array2 <- bilinearGradArray(locs, covariates)
 ```
 
 ```{r}
