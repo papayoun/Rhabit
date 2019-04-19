@@ -69,8 +69,6 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   # Estimate of nu = gamma^2 * beta
   nu_hat <- nu_hat_var %*% t(grad_mat) %*% loc_increment;
   
-  gamma2_hat <- NULL
-  
   # Predicted response
   predictor <- sq_time_lag * grad_mat %*% nu_hat
   
@@ -100,11 +98,12 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   # Format output
   rownames(beta_hat_var) <- colnames(beta_hat_var) <- paste0("beta", 1:J)
   rownames(conf_interval) <- c(rownames(beta_hat_var), "gamma2")
+  colnames(conf_interval) <- c((1-0.95)/2, (1+0.95)/2)
   
   # R squared
   r_square <- 1 - colSums( (Y -  predictor) ^ 2) / sum(Y ^ 2)
   
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
-              betaHatVariance = beta_hat_var, betaHat95CI = conf_interval,
+              betaHatVariance = beta_hat_var, CI = conf_interval,
               R2 = r_square))
 }
