@@ -29,7 +29,7 @@ a two 2d vector for the gradient}
 \item{silent}{logical, should simulation advancement be shown?}
 
 \item{keep_grad}{should gradient values at simulated points be kept?
-This avoids to use covGradAtLocs later on
+This avoids to compute gradient later on
 xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).}
 }
 \description{
