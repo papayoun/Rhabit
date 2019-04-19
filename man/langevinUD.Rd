@@ -4,7 +4,8 @@
 \alias{langevinUD}
 \title{Obtaining UD estimate of an animal using Langevin movement model}
 \usage{
-langevinUD(locs, times, ID = NULL, grad_array, with_speed = TRUE)
+langevinUD(locs, times, ID = NULL, grad_array, with_speed = TRUE,
+  alpha = 0.95)
 }
 \arguments{
 \item{locs}{Matrix of locations having size, say, n}
@@ -19,6 +20,8 @@ where J is the amount of covariates}
 
 \item{with_speed}{Logical. If TRUE, the speed parameter is estimated
 Other wise it is set to one}
+
+\item{alpha}{Confidence level (default: 0.95, i.e. 95\% confidence intervals)}
 }
 \value{
 A list of: est, the vector of estimates, and var, the

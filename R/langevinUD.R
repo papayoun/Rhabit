@@ -10,12 +10,14 @@
 #' where J is the amount of covariates
 #' @param with_speed Logical. If TRUE, the speed parameter is estimated
 #' Other wise it is set to one
+#' @param alpha Confidence level (default: 0.95, i.e. 95\% confidence intervals)
 #'
 #' @return A list of: est, the vector of estimates, and var, the
 #' covariance matrix of the estimates.
 #'
 #'@export
-langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
+langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
+                       alpha = 0.95){
   
   # Check input types
   if (!(inherits(locs, "matrix") & typeof(locs) %in% c("double", "integer")))
@@ -87,18 +89,20 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE){
   }
   
   # Confidence intervals for habitat selection parameters
+  quantlow <- (1 - alpha)/2 # Lower quantile
+  quantup <- 1 - (1 - alpha)/2 # Upper quantile
   conf_interval_beta <- t(sapply(1:length(beta_hat), function(j) {
-    beta_hat[j] + c(1, -1) * stats::qnorm(0.025) *  sqrt(beta_hat_var[j, j])
+    beta_hat[j] + c(1, -1) * stats::qnorm(quantlow) *  sqrt(beta_hat_var[j, j])
   }))
   
   # Confidence interval for speed parameter
-  conf_interval_gamma2 <- gamma2_hat * DF / stats::qchisq(c(0.975, 0.025), DF)
+  conf_interval_gamma2 <- gamma2_hat * DF / stats::qchisq(c(quantup, quantlow), DF)
   conf_interval <- rbind(conf_interval_beta, conf_interval_gamma2)
   
   # Format output
   rownames(beta_hat_var) <- colnames(beta_hat_var) <- paste0("beta", 1:J)
   rownames(conf_interval) <- c(rownames(beta_hat_var), "gamma2")
-  colnames(conf_interval) <- c((1-0.95)/2, (1+0.95)/2)
+  colnames(conf_interval) <- c(quantlow, quantup)
   
   # R squared
   r_square <- 1 - colSums( (Y -  predictor) ^ 2) / sum(Y ^ 2)
