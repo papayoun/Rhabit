@@ -125,7 +125,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
 
   # Get AIC for fitted model
   AIC <- AICEuler(beta = as.numeric(beta_hat), gamma2 = gamma2_hat,
-                  xy = xy, time = times, ID = ID, gradarray = gradarray)
+                  locs = locs, times = times, ID = ID, grad_array = grad_array)
     
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
               betaHatVariance = beta_hat_var, CI = conf_interval,
