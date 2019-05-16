@@ -122,8 +122,12 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
     # Standardized (Studentized) residuals
     res <- res / (sqrt(gamma2_hat * (1 - diag(H))))
   }  
-  
+
+  # Get AIC for fitted model
+  AIC <- AICEuler(beta = as.numeric(beta_hat), gamma2 = gamma2_hat,
+                  xy = xy, time = times, ID = ID, gradarray = gradarray)
+    
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
               betaHatVariance = beta_hat_var, CI = conf_interval,
-              R2 = r_square, residuals = res, lever = diag(H)))
+              R2 = r_square, residuals = res, lever = diag(H), AIC = AIC))
 }
