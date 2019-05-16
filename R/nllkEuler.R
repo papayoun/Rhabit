@@ -13,14 +13,14 @@
 #' @return Negative log-likelihood
 nllkEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)
 {
-    n <- nrow(xy)
+    n <- nrow(locs)
     
     # multiply gradients by beta coefficients
     gradmat <- 0.5 * gamma2 * apply(grad_array, 2, function(mat) mat %*% beta)
     
     # only one track
     if(is.null(ID))
-        ID <- rep(1,nrow(xy))
+        ID <- rep(1,nrow(locs))
     
     # indices of first and last obs in tracks
     break_ind <- which(ID[-1] != ID[-n])
@@ -31,8 +31,8 @@ nllkEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)
     dt <- times[-start_ind] - times[-end_ind]
 
     # log likelihood
-    llk <- sum(dnorm(xy[-start_ind,],
-                     xy[-end_ind,] + dt * gradmat[-end_ind,],
+    llk <- sum(dnorm(locs[-start_ind,],
+                     locs[-end_ind,] + dt * gradmat[-end_ind,],
                      sqrt(gamma2 * dt),
                      log=TRUE))
     
