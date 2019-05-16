@@ -11,13 +11,15 @@
 #' @param with_speed Logical. If TRUE, the speed parameter is estimated
 #' Other wise it is set to one
 #' @param alpha Confidence level (default: 0.95, i.e. 95\% confidence intervals)
+#' @param standard_res Logical. If TRUE, the standardized residuals are
+#' returned. (Default: FALSE)
 #'
 #' @return A list of: est, the vector of estimates, and var, the
 #' covariance matrix of the estimates.
 #'
 #'@export
 langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
-                       alpha = 0.95){
+                       alpha = 0.95, standard_res = FALSE){
   
   # Check input types
   if (!(inherits(locs, "matrix") & typeof(locs) %in% c("double", "integer")))
@@ -109,8 +111,19 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   
   # Residuals
   res <- matrix(Y - predictor, ncol = 2)
+
+  # Design matrix
+  Z <- sq_time_lag * grad_mat
+
+  # Hat matrix (leverages on diagonal)
+  H <- Z %*% solve(t(Z) %*% Z) %*% t(Z)
+    
+  if(standard_res) {
+    # Standardized (Studentized) residuals
+    res <- res / (sqrt(gamma2_hat * (1 - diag(H))))
+  }  
   
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
               betaHatVariance = beta_hat_var, CI = conf_interval,
-              R2 = r_square, residuals = res))
+              R2 = r_square, residuals = res, lever = diag(H)))
 }
