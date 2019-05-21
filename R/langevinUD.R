@@ -129,5 +129,6 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
     
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
               betaHatVariance = beta_hat_var, CI = conf_interval,
+              predicted = matrix(predictor, ncol = 2),
               R2 = r_square, residuals = res, lever = diag(H), AIC = AIC))
 }
