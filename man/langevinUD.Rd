@@ -5,7 +5,7 @@
 \title{Obtaining UD estimate of an animal using Langevin movement model}
 \usage{
 langevinUD(locs, times, ID = NULL, grad_array, with_speed = TRUE,
-  alpha = 0.95)
+  alpha = 0.95, leverage = FALSE)
 }
 \arguments{
 \item{locs}{Matrix of locations having size, say, n}
@@ -22,6 +22,10 @@ where J is the amount of covariates}
 Other wise it is set to one}
 
 \item{alpha}{Confidence level (default: 0.95, i.e. 95\% confidence intervals)}
+
+\item{leverage}{Logical. If TRUE, the standardized residuals and the leverage
+are returned. Default: FALSE. Might not work when there are many observations,
+because it creates an n times n matrix.}
 }
 \value{
 A list of: est, the vector of estimates, and var, the
