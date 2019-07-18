@@ -1,1 +1,6 @@
-destination: docs
+
+templates:
+  params:
+bootswatch: readable
+
+
