@@ -22,11 +22,6 @@ navbar:
     - text: "Changelog"
       href: news/index.html
 
-reference:
-- title: 'Top-level fitting functions'
-  desc: >
-    Set of functions to fit variants of the Poisson lognormal model
-  contents:
-  - starts_with('getUD')
+
 
     
