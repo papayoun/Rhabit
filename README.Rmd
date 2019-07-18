@@ -1,0 +1,31 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.path = "man/figures/"
+)
+```
+
+
+# Rhabit package  <img src="man/figures/logo.png" align="right" width="155" height="180"/>
+
+
+The Rhabit package propose to estimate classical ressource selection function from movement data using a Langevin model.
+
+
+## References
+
+Please cite our work using the following references:
+
+- The Langevin diffusion as a continuous-time model of animal movement and habitat selection
+T Michelot, MP Etienne, P Gloaguen [arXiv preprint arXiv:1810.10213](https://arxiv.org/abs/1810.10213)
+
+
+
+
+
+
+

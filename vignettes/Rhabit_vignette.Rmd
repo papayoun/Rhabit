@@ -156,6 +156,28 @@ grad_array2 <- bilinearGradArray(locs, covariates)
 ```
 
 ```{r}
-langevinUD(locs = locs, times = times, grad_array = grad_array)
+langevin_result <- langevinUD(locs = locs, times = times, grad_array = grad_array)
+```
+
+The estimated parameters can be obtained via 
+
+
+```{r}
+langevin_result$betaHat
+langevin_result$gamma2Hat
+```
+
+The asymptotic covariance matrix and the corresponding Confidence interval are given in 
+
+```{r}
+langevin_result$betaHatVariance
+langevin_result$CI
+```
+
+
+The expected trend in the movement at each observed location is given by 
+
+```{r}
+head(langevin_result$predicted, n = 10)
 ```
 
