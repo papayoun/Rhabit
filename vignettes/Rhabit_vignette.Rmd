@@ -15,7 +15,7 @@ editor_options:
 rm(list = ls())
 knitr::opts_chunk$set(
   message = F, error = F, warning = F,
-  comment = "NA"
+  comment = NA
 )
 ```
 
