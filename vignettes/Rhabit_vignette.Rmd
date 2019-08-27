@@ -1,8 +1,10 @@
 ---
-title: "RLangevin_MM vignette"
-author: "Pierre Gloaguen"
+title: "Simulation - Estimation of a full Langevin model"
+author: "Pierre Gloaguen, Marie-Pierre Etienne"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_document
+bibliography: 
+  - biblio.bib
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEncoding{UTF-8}
@@ -15,7 +17,7 @@ editor_options:
 rm(list = ls())
 knitr::opts_chunk$set(
   message = F, error = F, warning = F,
-  comment = "NA"
+  comment = NA
 )
 ```
 
@@ -27,10 +29,22 @@ library(gridExtra)
 library(abind)
 ```
 
-# Simulating covariate fields
 
-Here is an example to simulate covariates.
-First, setting simulation parameters
+This vignette illustrates the use of the Rhabit package to simulate data from a Langevin model and to estimate the parameters.
+
+
+# Simulation of the Langevin model
+
+In the Langevin model, we assume that the movement is directed by a field of covariates. Those fields of covariates are mandatory to simulate a path according to the model.
+
+
+
+## Simulating covariate fields
+
+In the presented example, the path is observed on a square, centered on the origine and whose sides equal 30. 
+
+In order to g a enerate a field of covariates, we propose to simulate two Mattern processes with the same parameters parameters $(\rho, \nu, \sigma^2)$  The covriates are obtained by applying a log transformation to the square of the Mattern process. 
+
 
 ```{r simCovParams}
 set.seed(1)# repeatability
@@ -53,13 +67,16 @@ covariates <- replicate(J,
                         simplify = F)
 ```
 
-The resulting covariates can be loaded in R directly after loading the package:
+
+
+The resulting covariates are available in the package~:
 
 ```{r loadingCovariates, echo = T, message=FALSE}
 data("covariates", package = "Rhabit")
 ```
 
-## Covariates
+## Representation of the fileds of covariates 
+
 
 ```{r plot}
 ggopts <- theme_light()+theme(text = element_text(size = 20),
@@ -80,8 +97,13 @@ ggplot(cov_df, aes(x,y)) + geom_raster(aes(fill = val)) +
 ```
 
 
-# Plotting UD
+## The resulting Utilization Distribution 
 
+<!-- As detailed in the paper [@mgeb19] -->
+
+\begin{equation}
+	\rmd\X_t = \dfrac{\gamma^2}{2} \nabla \log \ud(\X_t) \rmd t + \gamma \rmd \bm{W}_t,\quad \X_0 =\bm{x}_0.
+\end{equation}
 ```{r UD}
 beta_true <- c(10, 5)
 ud_rast <- covariates[[1]] # initialization
@@ -156,6 +178,28 @@ grad_array2 <- bilinearGradArray(locs, covariates)
 ```
 
 ```{r}
-langevinUD(locs = locs, times = times, grad_array = grad_array)
+langevin_result <- langevinUD(locs = locs, times = times, grad_array = grad_array)
+```
+
+The estimated parameters can be obtained via 
+
+
+```{r}
+langevin_result$betaHat
+langevin_result$gamma2Hat
+```
+
+The asymptotic covariance matrix and the corresponding Confidence interval are given in 
+
+```{r}
+langevin_result$betaHatVariance
+langevin_result$CI
+```
+
+
+The expected trend in the movement at each observed location is given by 
+
+```{r}
+head(langevin_result$predicted, n = 10)
 ```
 

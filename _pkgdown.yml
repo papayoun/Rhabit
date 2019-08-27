@@ -1,0 +1,23 @@
+templates:
+  params:
+    bootswatch: yeti
+
+navbar:
+  title: "Rhabit"
+  left:
+    - icon: fa-home
+    - text: "Home"
+      href: index.html
+    - text: "Reference"
+      href: "reference/index.html"
+#    - text: "Article"
+#      href: "articles/article/PLNmodels.html"
+    - text: "Vignettes"
+      menu:
+      - text: "Langevin vignette"
+        href: articles/Rhabit_vignette.html
+  right:
+    - icon: fa-github
+      href: https://github.com/MarieEtienne/Rhabit
+    - text: "Changelog"
+      href: news/index.html
