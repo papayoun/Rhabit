@@ -11,6 +11,7 @@
 #' The rows index time, the columns are the dimensions (x and y), and the 
 #' layers index the covariates .
 #' 
+#' 
 #' @return AIC
 AICEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)
 {
