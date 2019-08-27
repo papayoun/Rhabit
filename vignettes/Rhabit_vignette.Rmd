@@ -99,7 +99,7 @@ ggplot(cov_df, aes(x,y)) + geom_raster(aes(fill = val)) +
 
 ## The resulting Utilization Distribution 
 
-As detailed in the paper [@mgeb19]
+<!-- As detailed in the paper [@mgeb19] -->
 
 \begin{equation}
 	\rmd\X_t = \dfrac{\gamma^2}{2} \nabla \log \ud(\X_t) \rmd t + \gamma \rmd \bm{W}_t,\quad \X_0 =\bm{x}_0.
