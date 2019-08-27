@@ -9,7 +9,7 @@
 #' @param ID Vector of track identifiers, must be of length n
 #' @param grad_array Three-dimensional array of gradients of covariate fields. 
 #' The rows index time, the columns are the dimensions (x and y), and the 
-#' layers index the covariates.
+#' layers index the covariates .
 #' 
 #' @return AIC
 AICEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)

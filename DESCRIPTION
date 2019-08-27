@@ -2,7 +2,12 @@ Package: Rhabit
 Type: Package
 Title: Estimation of animal habitat selection using the Langevin movement model
 Version: 0.1.0
-Author: Pierre Gloaguen and Théo Michelot
+Authors@R: c(
+     person("Pierre", "Gloaguen", ,"pierre.gloaguen@agroparistech.fr", role = c("aut", "cre")
+    ), person("Théo", "Michelot", ,"tm75@st-andrews.ac.uk", role = c("aut")
+    ),person("Marie-Pierre", "Etienne", ,"marie-pierre.etienne@agrocampus-ouest.fr", role = c("ctb")
+    )
+    )
 Maintainer: Pierre Gloaguen <pierre.gloaguen@agroparistech.fr>
 Description: Estimation of animal habitat selection using the Langevin movement model.
 License: GPL-2
