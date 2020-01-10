@@ -18,14 +18,19 @@
 #' a two 2d vector for the gradient
 #' @param silent logical, should simulation advancement be shown?
 #' @param keep_grad should gradient values at simulated points be kept?
+#' @param debug in debug mode, gradient values are kept in grad.csv file stored in the working directory
 #' This avoids to compute gradient later on
 #' xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).
 #' @export
 simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
-                          cov_list = NULL, grad_fun = NULL, silent = F,
-                          keep_grad = F) {
+                          cov_list = NULL, grad_fun = NULL, silent = F, 
+                          keep_grad = F, cov_fun = NULL, b_box = NULL, debug = FALSE) {
   checkCovGrad(cov_list, grad_fun)
   nb_obs <- length(times)
+  if(debug){
+    grad_save <- matrix(NA, ncol= 2, nrow = nb_obs-1)
+    file_save <- file.path('grad.csv')
+  }
 
   # Matrix of simulated locations
   xy <- matrix(NA, nb_obs, 2)
@@ -70,10 +75,25 @@ simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
 
     # Gradient of utilisation distribution
     grad <- grad_val %*% beta
-
+    if(debug){
+      grad_save[t-1, ] <- grad_val
+    }
     # Simulate next location
     rand_part <- stats::rnorm(2, 0, sqrt(gamma2 * dt[t - 1]))
     xy[t, ] <- xy[t - 1, ] + 0.5 * grad * gamma2 * dt[t - 1] + rand_part
+    n_trial <- 1
+    if(!is.null(b_box)){
+      if(!in_bbox(xy[t,], bbox = b_box))
+        while (!in_bbox(xy[t,], b_box )  & n_trial <100 ){
+          rand_part <- stats::rnorm(2, 0, sqrt(gamma2 * dt[t - 1]))
+          xy[t, ] <- xy[t - 1, ] + 0.5 * grad * gamma2 * dt[t - 1] + rand_part
+          n_trial <- n_trial +1
+        } 
+      if(n_trial == 100){
+        stop('Maximal number of trials to stay within the given bounding box is reached.\n')
+      }
+    }
+   
   }
 
   if (!silent)
@@ -90,6 +110,8 @@ simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
     grad_array[nb_obs, ] <- as.numeric(grad_val)
     main_df <- cbind.data.frame(main_df, grad_array)
   }
-
+ if(debug){
+   write.csv(grad_save, file = file_save,row.names = FALSE) 
+ }
   return(main_df)
 }

@@ -5,7 +5,8 @@
 \title{Simulate from the Langevin movement model}
 \usage{
 simLangevinMM(beta, gamma2 = 1, times, loc0, cov_list = NULL,
-  grad_fun = NULL, silent = F, keep_grad = F)
+  grad_fun = NULL, silent = F, keep_grad = F, cov_fun = NULL,
+  b_box = NULL, debug = FALSE)
 }
 \arguments{
 \item{beta}{Vector of resource selection coefficients}
@@ -28,7 +29,9 @@ a two 2d vector for the gradient}
 
 \item{silent}{logical, should simulation advancement be shown?}
 
-\item{keep_grad}{should gradient values at simulated points be kept?
+\item{keep_grad}{should gradient values at simulated points be kept?}
+
+\item{debug}{in debug mode, gradient values are kept in grad.csv file stored in the working directory
 This avoids to compute gradient later on
 xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).}
 }

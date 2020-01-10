@@ -1,3 +1,5 @@
+## find neighbours around x0
+
 getGridZoom <- function(covar, x0, lag_inter = 2){
   if (is.null(covar))
     return(NULL)

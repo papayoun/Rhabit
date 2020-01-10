@@ -21,7 +21,6 @@
 #'@export
 langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
                        alpha = 0.95, leverage = FALSE){
-  
   # Check input types
   if (!(inherits(locs, "matrix") & typeof(locs) %in% c("double", "integer")))
     stop("locs must be a numeric matrix")
@@ -52,7 +51,12 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   end_ind <- c(break_ind, n)
   
   # Matrix of covariate gradients
+  ## doesn't work witha unique covariable
+  if(J == 1){
+    grad_mat <- 0.5 * matrix(c( grad_array[-end_ind,1,1],  grad_array[-end_ind, 2, 1] ), ncol = 1)
+  } else {
   grad_mat <- 0.5 * rbind(grad_array[-end_ind, 1, ], grad_array[-end_ind, 2, ])
+  }
   
   # Vector of time differences
   time_lag <- rep(times[-start_ind] - times[-end_ind], 2)
