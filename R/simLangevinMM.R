@@ -4,6 +4,7 @@
 #' This function is based on the Euler approximation.
 #'
 #' @name simLangevinMM
+#' @importFrom utils write.csv
 #' @param beta Vector of resource selection coefficients
 #' @param gamma2 Scalar speed parameter
 #' @param times Vector of times of observations. Should have a small
@@ -18,9 +19,10 @@
 #' a two 2d vector for the gradient
 #' @param silent logical, should simulation advancement be shown?
 #' @param keep_grad should gradient values at simulated points be kept?
-#' @param debug in debug mode, gradient values are kept in grad.csv file stored in the working directory
-#' This avoids to compute gradient later on
+#' This avoids to compute gradient later on 
 #' xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).
+#' @param b_box a 2x2 matrix with the minimum value on the first line for x and y and the maximum value on the second line
+#' @param debug in debug mode, gradient values are kept in grad.csv file stored in the working directory
 #' @export
 simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
                           cov_list = NULL, grad_fun = NULL, silent = F, 

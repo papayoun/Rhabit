@@ -29,11 +29,13 @@ a two 2d vector for the gradient}
 
 \item{silent}{logical, should simulation advancement be shown?}
 
-\item{keep_grad}{should gradient values at simulated points be kept?}
-
-\item{debug}{in debug mode, gradient values are kept in grad.csv file stored in the working directory
-This avoids to compute gradient later on
+\item{keep_grad}{should gradient values at simulated points be kept?
+This avoids to compute gradient later on 
 xgrid and ygrid, of dimensions (length(xgrid),length(ygrid),length(beta)).}
+
+\item{b_box}{a 2x2 matrix with the minimum value on the first line for x and y and the maximum value on the second line}
+
+\item{debug}{in debug mode, gradient values are kept in grad.csv file stored in the working directory}
 }
 \description{
 This function is based on the Euler approximation.
