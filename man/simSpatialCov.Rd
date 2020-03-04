@@ -4,8 +4,15 @@
 \alias{simSpatialCov}
 \title{Simulate random covariate field}
 \usage{
-simSpatialCov(lim, nu, rho, sigma2, resol = 1, mean_function = NULL,
-  raster_like = FALSE)
+simSpatialCov(
+  lim,
+  nu,
+  rho,
+  sigma2,
+  resol = 1,
+  mean_function = NULL,
+  raster_like = FALSE
+)
 }
 \arguments{
 \item{lim}{Vector of limits of the map (xmin, xmax, ymin, ymax)}

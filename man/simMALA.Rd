@@ -4,8 +4,15 @@
 \alias{simMALA}
 \title{Simulate from Metropolis-adjusted Langevin algorithm}
 \usage{
-simMALA(beta, gamma2 = 1, times, loc0, cov_list = NULL,
-  grad_fun = NULL, silent = FALSE)
+simMALA(
+  beta,
+  gamma2 = 1,
+  times,
+  loc0,
+  cov_list = NULL,
+  grad_fun = NULL,
+  silent = FALSE
+)
 }
 \arguments{
 \item{beta}{Vector of resource selection coefficients}

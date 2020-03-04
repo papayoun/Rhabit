@@ -4,8 +4,15 @@
 \alias{langevinUD}
 \title{Obtaining UD estimate of an animal using Langevin movement model}
 \usage{
-langevinUD(locs, times, ID = NULL, grad_array, with_speed = TRUE,
-  alpha = 0.95, leverage = FALSE)
+langevinUD(
+  locs,
+  times,
+  ID = NULL,
+  grad_array,
+  with_speed = TRUE,
+  alpha = 0.95,
+  leverage = FALSE
+)
 }
 \arguments{
 \item{locs}{Matrix of locations having size, say, n}

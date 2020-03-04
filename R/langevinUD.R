@@ -55,7 +55,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   if(J == 1){
     grad_mat <- 0.5 * matrix(c( grad_array[-end_ind,1,1],  grad_array[-end_ind, 2, 1] ), ncol = 1)
   } else {
-  grad_mat <- 0.5 * rbind(grad_array[-end_ind, 1, ], grad_array[-end_ind, 2, ])
+    grad_mat <- 0.5 * rbind(grad_array[-end_ind, 1, ], grad_array[-end_ind, 2, ])
   }
   
   # Vector of time differences
@@ -116,7 +116,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   
   # Residuals
   res <- matrix(Y - predictor, ncol = 2)
-
+  
   if(leverage) {
     # Design matrix
     Z <- sq_time_lag * grad_mat
@@ -132,13 +132,43 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   } else {
     lever <- NULL
   }
-
+  get_predicted <- function(mat_pred){
+    purrr::map_dfr(unique(ID), 
+                   function(id){
+                     my_x <- locs[ID == id, 1]
+                     my_y <- locs[ID == id, 2]
+                     my_inc_x <- c(mat_pred[ID[-end_ind] == id, 1], NA)
+                     my_inc_y <- c(mat_pred[ID[-end_ind] == id, 2], NA)
+                     my_times <- times[ID == id]
+                     my_sq_time_lag <- c(sqrt(diff(my_times)), NA)
+                     tibble::tibble(ID = id, 
+                                    x = dplyr::lag(my_x + my_sq_time_lag * my_inc_x),
+                                    y = dplyr::lag(my_y + my_sq_time_lag * my_inc_y),
+                                    t = my_times)
+                   })
+  }
+  get_increment_residuals <- function(mat){
+    purrr::map_dfr(unique(ID), 
+                   function(id){
+                     ok  <- ID[-end_ind] == id
+                     z <- mat[ok, ]
+                     loc_times <- times[ID == id]
+                     tibble::tibble(ID = id, 
+                            x = z[, 1], y = z[, 2]) %>% 
+                       dplyr::bind_rows(tibble::tibble(ID = id, x = NA, y = NA)) %>% 
+                       dplyr::mutate(t = loc_times)
+                   })
+  }
+  out_res <- get_increment_residuals(res)
+  out_pred <- get_predicted(matrix(predictor, ncol = 2))
+  
   # Get AIC for fitted model
   AIC <- AICEuler(beta = as.numeric(beta_hat), gamma2 = gamma2_hat,
                   locs = locs, times = times, ID = ID, grad_array = grad_array)
-    
+  
   return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
               betaHatVariance = beta_hat_var, CI = conf_interval,
-              predicted = matrix(predictor, ncol = 2),
-              R2 = r_square, residuals = res, lever = lever, AIC = AIC))
+              predicted = out_pred,
+              R2 = r_square, residuals = out_res, 
+              lever = lever, AIC = AIC))
 }

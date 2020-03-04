@@ -4,8 +4,7 @@
 \alias{plotRaster}
 \title{Plot raster with ggplot}
 \usage{
-plotRaster(rast, norm = FALSE, log = FALSE, scale.name = "",
-  light = FALSE)
+plotRaster(rast, norm = FALSE, log = FALSE, scale.name = "", light = FALSE)
 }
 \arguments{
 \item{rast}{Raster object}

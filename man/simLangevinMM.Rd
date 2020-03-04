@@ -4,9 +4,19 @@
 \alias{simLangevinMM}
 \title{Simulate from the Langevin movement model}
 \usage{
-simLangevinMM(beta, gamma2 = 1, times, loc0, cov_list = NULL,
-  grad_fun = NULL, silent = F, keep_grad = F, cov_fun = NULL,
-  b_box = NULL, debug = FALSE)
+simLangevinMM(
+  beta,
+  gamma2 = 1,
+  times,
+  loc0,
+  cov_list = NULL,
+  grad_fun = NULL,
+  silent = F,
+  keep_grad = F,
+  cov_fun = NULL,
+  b_box = NULL,
+  debug = FALSE
+)
 }
 \arguments{
 \item{beta}{Vector of resource selection coefficients}
