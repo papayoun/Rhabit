@@ -10,7 +10,7 @@
 plotCovariates <- function(covariates_list, trajectory_data = NULL){
   J <- length(covariates_list)
   covariates_df <- map_dfr(covariates_list, # To each element of the list, apply
-                           Rhabit::rasterToGGplot, # This function
+                           Rhabit::rasterToDataFrame, # This function
                            .id = "Covariate") %>% # Keep origin in a Covariate column
     mutate(Covariate = factor(Covariate, labels = paste("Cov.", 1:J)))
   # First, for one covariate

@@ -11,7 +11,7 @@
 #' @export
 plotUD <- function(covariates, beta, log = F){
   ud_df <- getUD(covariates, beta) %>% 
-    rasterToGGplot() 
+    rasterToDataFrame() 
   ggplot(ud_df, 
          aes(x = x, y = y)) +
     geom_raster(aes(fill = val)) +

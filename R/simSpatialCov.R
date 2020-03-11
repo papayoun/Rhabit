@@ -40,14 +40,14 @@ simSpatialCov <- function(lim, nu, rho, sigma2, resol = 1,
 
 #' Transform (x,y,z) list to data.frame
 #'
-#' @name rasterToGGplot
+#' @name rasterToDataFrame
 #' @param my_list A raster like list containing elements x, y, z
 #' (see simSpatialCov)
 #' @param level An optional factor argument to add to a level column
 #' (useful to pu color for instance)
 #' @return A data.frame (convenient for ggplot2)
 #' @export
-rasterToGGplot <- function(my_list, level = NULL){
+rasterToDataFrame <- function(my_list, level = NULL){
   coords <- as.matrix(expand.grid(my_list$x, my_list$y))
   vals <- as.numeric(my_list$z)
   out <- data.frame(x = coords[, 1], y = coords[, 2], val = vals)

@@ -89,7 +89,7 @@ levels <- factor(paste("Covariate", 1:J), levels = paste("Covariate", 1:J))
 cov_df <- do.call(rbind.data.frame,
                  lapply(1:J,
                         function(j){
-                          Rhabit::rasterToGGplot(covariates[[j]], levels[j])
+                          Rhabit::rasterToDataFrame(covariates[[j]], levels[j])
                         }))
 ggplot(cov_df, aes(x,y)) + geom_raster(aes(fill = val)) +
   coord_equal() + scale_fill_viridis(name = "Value") + facet_wrap(level~.) +
@@ -113,7 +113,7 @@ ud_rast$z <- exp(Reduce("+",
                     lapply(1:J, function(j)
                       dx * dy * beta_true[j] * covariates[[j]]$z)))
 ud_rast$z <- ud_rast$z / sum(ud_rast$z)
-ud_df <- rasterToGGplot(ud_rast)
+ud_df <- rasterToDataFrame(ud_rast)
 ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
   coord_equal() + scale_fill_viridis(name = "Value") +
   ggopts

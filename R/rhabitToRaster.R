@@ -10,5 +10,5 @@
 #' 
 #' @export
 rhabitToRaster <- function(r) {
-  raster::rasterFromXYZ(rasterToGGplot(r))
+  raster::rasterFromXYZ(rasterToDataFrame(r))
 }
