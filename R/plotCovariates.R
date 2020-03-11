@@ -1,0 +1,38 @@
+#' Plotting the classical RSF UD
+#' @name plotCovariates
+#'
+#' @param covariates covariates list, that must be a list of "raster-like"
+#' elements. It is for the moment supposed that the grid is regular and
+#' shared by all elemebts of covariates
+#'
+#' @return a ggplot
+#' @export
+plotCovariates <- function(covariates_list){
+  J <- length(covariates_list)
+  covariates_df <- map_dfr(covariates_list, # To each element of the list, apply
+                           Rhabit::rasterToGGplot, # This function
+                           .id = "Covariate") %>% # Keep origin in a Covariate column
+    mutate(Covariate = factor(Covariate, labels = paste("Cov.", 1:J)))
+  # First, for one covariate
+  plot_covariate <- function(df, cov_name, plot_traj = FALSE) {
+    main_plot <-ggplot(data = df, aes(x = x, y = y)) +
+      geom_raster(aes(fill = val)) +
+      scale_fill_viridis_c(name = cov_name) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      labs(title = cov_name, x = "X-axis", y = "Y-axis") +
+      theme(legend.position = "bottom")
+    if(plot_traj){
+      return(main_plot +     
+               geom_path(data = trajectory_data, aes(group = ID)))
+    }
+    else{
+      return(main_plot)
+    }
+  }
+  covariates_df %>% # Take the data.frame
+    group_by(Covariate) %>% # Group by Covariate
+    nest() %>% # Make a tibble, the second "column" gathers the data
+    mutate(plots = map2(data, Covariate, plot_covariate)) %>% 
+    gridExtra::grid.arrange(grobs = .$plots, nrow = 1)
+}
