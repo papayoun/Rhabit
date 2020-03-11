@@ -3,8 +3,8 @@
 #'
 #' @param covariates covariates list, that must be a list of "raster-like"
 #' elements. It is for the moment supposed that the grid is regular and
-#' shared by all elemebts of covariates
-#'
+#' shared by all elements of covariates
+#' @param trajectory_data An optional argument giving the trajectory data to supperpose.
 #' @return a ggplot
 #' @export
 plotCovariates <- function(covariates_list, trajectory_data = NULL){

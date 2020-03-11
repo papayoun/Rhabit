@@ -4,12 +4,14 @@
 \alias{plotCovariates}
 \title{Plotting the classical RSF UD}
 \usage{
-plotCovariates(covariates_list)
+plotCovariates(covariates_list, trajectory_data = NULL)
 }
 \arguments{
+\item{trajectory_data}{An optional argument giving the trajectory data to supperpose.}
+
 \item{covariates}{covariates list, that must be a list of "raster-like"
 elements. It is for the moment supposed that the grid is regular and
-shared by all elemebts of covariates}
+shared by all elements of covariates}
 }
 \value{
 a ggplot
