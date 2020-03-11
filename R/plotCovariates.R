@@ -7,13 +7,18 @@
 #'
 #' @return a ggplot
 #' @export
-plotCovariates <- function(covariates_list){
+plotCovariates <- function(covariates_list, trajectory_data = NULL){
   J <- length(covariates_list)
   covariates_df <- map_dfr(covariates_list, # To each element of the list, apply
                            Rhabit::rasterToGGplot, # This function
                            .id = "Covariate") %>% # Keep origin in a Covariate column
     mutate(Covariate = factor(Covariate, labels = paste("Cov.", 1:J)))
   # First, for one covariate
+  if(!is.null(trajectory_data)){
+    if(is.null(trajectory_data$ID)){
+      trajectory_data$ID = rep("1", nrow(trajectory_data))
+    }
+  }
   plot_covariate <- function(df, cov_name, plot_traj = FALSE) {
     main_plot <-ggplot(data = df, aes(x = x, y = y)) +
       geom_raster(aes(fill = val)) +
@@ -33,6 +38,7 @@ plotCovariates <- function(covariates_list){
   covariates_df %>% # Take the data.frame
     group_by(Covariate) %>% # Group by Covariate
     nest() %>% # Make a tibble, the second "column" gathers the data
-    mutate(plots = map2(data, Covariate, plot_covariate)) %>% 
+    mutate(plots = map2(data, Covariate, plot_covariate,
+                        plot_traj = !is.null(trajectory_data))) %>% 
     gridExtra::grid.arrange(grobs = .$plots, nrow = 1)
 }
