@@ -1,4 +1,3 @@
-
 #' Rhabit to raster
 #' 
 #' Transform a (x,y,z) list, as used in Rhabit, into a raster object
