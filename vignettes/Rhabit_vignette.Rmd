@@ -192,6 +192,7 @@ langevin_result$gamma2Hat
 The asymptotic covariance matrix and the corresponding Confidence interval are given in 
 
 ```{r}
+summary(langevin_result)
 langevin_result$betaHatVariance
 langevin_result$CI
 ```

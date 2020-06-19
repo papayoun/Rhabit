@@ -165,10 +165,37 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   # Get AIC for fitted model
   AIC <- AICEuler(beta = as.numeric(beta_hat), gamma2 = gamma2_hat,
                   locs = locs, times = times, ID = ID, grad_array = grad_array)
-  
-  return(list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
-              betaHatVariance = beta_hat_var, CI = conf_interval,
-              predicted = out_pred,
-              R2 = r_square, residuals = out_res, 
-              lever = lever, AIC = AIC))
+   
+  ans <- list(betaHat = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
+       betaHatVariance = beta_hat_var, CI = conf_interval,
+       df =   length(Y) - J,
+       predicted = out_pred,
+       R2 = r_square, residuals = out_res, 
+       lever = lever, AIC = AIC)
+  class(ans) <- 'rhabit'
+  return(ans)
 }
+
+
+
+#' Obtaining the summaryof a fitted  Langevin movement model 
+#'
+#' @name summary.rhabit
+#' @param rhabit_obj an object of class rhabit, obtained through the function langevinUD
+#' 
+#'
+#' @return the table corresponding to the test of H0 $beta_i = 0$ 
+#'
+#'@export 
+summary.rhabit <- function(rhabit_obj){
+  est <- rhabit_obj$betaHat
+  cov <- rhabit_obj$betaHatVariance
+  rdf <- rhabit_obj$df
+
+  se <- sqrt(diag(cov))
+  tval <- est/se
+  ans <- cbind(Estimate = est, `Std. Error` = se, 
+                            `t value` = tval, `Pr(>|t|)` = 2 * pt(abs(tval), rdf, 
+                                                                  lower.tail = FALSE))
+  return(ans)
+} 
