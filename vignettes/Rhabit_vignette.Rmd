@@ -161,12 +161,15 @@ library(abind)
 locs <- as.matrix(tracks[, 1:2])
 times <- tracks[, "t"]
 J <- length(beta_true)
-grad_array <- do.call(function(...) abind(..., along = 3),
-                      lapply(1:J, function(j){
+
+grad_list <- lapply(1:J, function(j){
                         tmp <- tracks[, (2 * (j + 1)):(2 * (j + 1) + 1)]
                         colnames(tmp) <- c("x", "y")
                         as.matrix(tmp)
-                      }))
+                      })
+names(grad_list) <- c('Var1', 'Var2')
+
+grad_array <- do.call(function(...) abind(..., along = 3),grad_list)
 ```
 
 
@@ -178,7 +181,7 @@ grad_array2 <- bilinearGradArray(locs, covariates)
 ```
 
 ```{r}
-langevin_result <- langevinUD(locs = locs, times = times, grad_array = grad_array)
+langevin_result <- langevinUD(locs = locs, times = times, grad_list = grad_list)
 ```
 
 The estimated parameters can be obtained via 
@@ -197,7 +200,15 @@ langevin_result$betaHatVariance
 langevin_result$CI
 ```
 
+**MPE essai avec la nouvelle ftonction**
 
+```{r}
+data_test <- cbind(locs)
+head(data_test)
+summary(langevin_result)
+langevin_result$betaHatVariance
+langevin_result$CI
+```
 The expected trend in the movement at each observed location is given by 
 
 ```{r}

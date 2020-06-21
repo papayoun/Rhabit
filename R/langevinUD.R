@@ -5,7 +5,7 @@
 #' @param locs Matrix of locations having size, say, n
 #' @param times Vector of observation times, must be of length n
 #' @param ID Vector of track identifiers, must be of length n
-#' @param grad_array Array of gradients of covariates, evaluated at
+#' @param grad_list list of gradients of covariates, evaluated at
 #' the locations of the observations, must be 3d array of dim(n, 2, J)
 #' where J is the amount of covariates
 #' @param with_speed Logical. If TRUE, the speed parameter is estimated
@@ -19,15 +19,20 @@
 #' covariance matrix of the estimates.
 #'
 #'@export
-langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
+langevinUD <- function(locs, times, ID = NULL, grad_list, with_speed = TRUE,
                        alpha = 0.95, leverage = FALSE){
+
+  if( is.null(names(grad_list))){
+    names(grad_list) <- paste0('V', 1:length(grad_list))
+  }
   # Check input types
   if (!(inherits(locs, "matrix") & typeof(locs) %in% c("double", "integer")))
     stop("locs must be a numeric matrix")
-  if (inherits(grad_array, "matrix")){
-    grad_array <- array(grad_array, dim = c(n, 2, 1))
-    warning("gradsArray was a matrix, and has been transformed to an array")
-  }
+  # if (inherits(grad_array, "matrix")){
+  #   n <- nrow
+  #   grad_array <- array(grad_array, dim = c(n, 2, 1))
+  #   warning("gradsArray was a matrix, and has been transformed to an array")
+  # }
   
   # Number of locations
   n <- nrow(locs)
@@ -39,11 +44,17 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
     stop("Length of times must be the nrow of locs")
   if (length(ID) != n)
     stop("Length of ID must be the nrow of locs")
-  if (dim(grad_array)[1] != n)
-    stop("The first dimension of gradientArray must be of size nrow(locs)")
+  invisible(
+    lapply(grad_list, function(g_){ 
+    if (nrow(g_) != n)
+    stop("The first dimension of ", names(g_), " must be of size nrow(locs)")
+  })
+  )
   
   # Number of covariates
-  J <- dim(grad_array)[3]
+  J <- length(grad_list)
+  ## covariates names
+  var_names <- names(grad_list)
   
   # Find first and last indices of tracks
   break_ind <- which(ID[-1] != ID[-n])
@@ -51,12 +62,12 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   end_ind <- c(break_ind, n)
   
   # Matrix of covariate gradients
-  ## doesn't work witha unique covariable
-  if(J == 1){
-    grad_mat <- 0.5 * matrix(c( grad_array[-end_ind,1,1],  grad_array[-end_ind, 2, 1] ), ncol = 1)
-  } else {
-    grad_mat <- 0.5 * rbind(grad_array[-end_ind, 1, ], grad_array[-end_ind, 2, ])
-  }
+  ## doesn't work with a unique covariable
+  prov <- lapply(1:J, function(j_){
+    0.5 * as.numeric(grad_list[[j_]][-end_ind, ])
+  })
+  grad_mat <- do.call(cbind, prov)
+  
   
   # Vector of time differences
   time_lag <- rep(times[-start_ind] - times[-end_ind], 2)
@@ -107,7 +118,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
   conf_interval <- rbind(conf_interval_beta, conf_interval_gamma2)
   
   # Format output
-  rownames(beta_hat_var) <- colnames(beta_hat_var) <- paste0("beta", 1:J)
+  rownames(beta_hat_var) <- colnames(beta_hat_var) <- var_names
   rownames(conf_interval) <- c(rownames(beta_hat_var), "gamma2")
   colnames(conf_interval) <- c(quantlow, quantup)
   
@@ -177,6 +188,46 @@ langevinUD <- function(locs, times, ID = NULL, grad_array, with_speed = TRUE,
 }
 
 
+#' Obtaining UD estimate of an animal using Langevin movement model
+#'
+#' @name langevinUD_formula
+#' @param locs Matrix of locations having size, say, n
+#' @param times Vector of observation times, must be of length n
+#' @param ID Vector of track identifiers, must be of length n
+#' @param grad_list list of gradients of covariates, evaluated at
+#' the locations of the observations, must be 3d array of dim(n, 2, J)
+#' where J is the amount of covariates
+#' @param with_speed Logical. If TRUE, the speed parameter is estimated
+#' Other wise it is set to one
+#' @param alpha Confidence level (default: 0.95, i.e. 95\% confidence intervals)
+#' @param leverage Logical. If TRUE, the standardized residuals and the leverage
+#' are returned. Default: FALSE. Might not work when there are many observations,
+#' because it creates an n times n matrix.
+#'
+#' @return A list of: est, the vector of estimates, and var, the
+#' covariance matrix of the estimates.
+#'
+#'@export
+langevinUD_formula <- function(formula, data,  with_speed = TRUE,
+                       alpha = 0.95, leverage = FALSE){
+  locs, times, ID = NULL, grad_list
+  
+  y_name <- as.character(formula)[2]
+  y_name <- stringr::str_remove_all(string = y_name, pattern = "[:punct:]|cbind")
+  y_name <- as.character(unlist(stringr::str_split(y_name, " ")))
+
+  stop(length(y_name)==2, "the LHS of the formula should have the form cbind('x','y')")
+  locs <- data[,y_name]
+  
+  if('ID' %in% colnames(data)){
+    ID <- data[, 'ID']
+  } else
+  {
+    ID <- rep(1, nrow(data))
+  }
+  
+  return(ans)
+}
 
 #' Obtaining the summaryof a fitted  Langevin movement model 
 #'
