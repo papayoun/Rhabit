@@ -184,37 +184,31 @@ grad_array2 <- bilinearGradArray(locs, covariates)
 ```{r}
 
 ## test with the formula
-formula_langevin_result <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+fitted_langevin <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
 ```
 
-The estimated parameters can be obtained via 
-
+The effects of the covariates  can be obtained via 
 
 ```{r}
-langevin_result$coefficients
-langevin_result$gamma2Hat
+coef(fitted_langevin)
+```
+
+
+while the speed parameter is obtained through
+```{r}
+speed_coef(fitted_langevin)
 ```
 
 The asymptotic covariance matrix and the corresponding Confidence interval are given in 
 
 ```{r}
-summary(langevin_result)
-langevin_result$betaHatVariance
-langevin_result$CI
+summary(fitted_langevin)
+fitted_langevin$CI
 ```
 
-**MPE essai avec la nouvelle ftonction**
-
-```{r}
-data_test <- cbind(locs)
-head(data_test)
-summary(langevin_result)
-langevin_result$betaHatVariance
-langevin_result$CI
-```
 The expected trend in the movement at each observed location is given by 
 
 ```{r}
-head(langevin_result$predicted, n = 10)
+head(fitted_langevin$predicted, n = 10)
 ```
 
