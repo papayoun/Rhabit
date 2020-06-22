@@ -4,14 +4,20 @@
 \alias{summary.rhabit}
 \title{Obtaining the summaryof a fitted  Langevin movement model}
 \usage{
-\method{summary}{rhabit}(rhabit_obj)
+\method{summary}{rhabit}(object)
 }
 \arguments{
-\item{rhabit_obj}{an object of class rhabit, obtained through the function langevinUD}
+\item{object}{an object of class rhabit, obtained through the function langevinUD}
 }
 \value{
 the table corresponding to the test of H0 $beta_i = 0$
 }
 \description{
 Obtaining the summaryof a fitted  Langevin movement model
+}
+\examples{
+data(tracks)
+fitted_langevinn <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+summary(fitted_langevin)
+
 }

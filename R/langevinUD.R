@@ -56,10 +56,10 @@ langevinUD <- function(locs, times, ID = NULL, grad_list, with_speed = TRUE,
   break_ind <- which(ID[-1] != ID[-n])
   start_ind <- c(1, break_ind + 1)
   end_ind <- c(break_ind, n)
-  
+
   # Matrix of covariate gradients
   prov <- lapply(grad_list, function(grad_) {
-    0.5 * as.numeric(grad_[-end_ind, ]) 
+    0.5 * as.numeric(grad_[-end_ind, ])
   })
   if (length(prov)==1) {
     grad_mat <- matrix(prov[[1]], ncol = 1)
@@ -158,13 +158,14 @@ langevinUD <- function(locs, times, ID = NULL, grad_list, with_speed = TRUE,
   # Get AIC for fitted model
   AIC <- AICEuler(beta = as.numeric(beta_hat), gamma2 = gamma2_hat,
                   locs = locs, times = times, ID = ID, grad_list = grad_list)
-  ans <- list(coefficients = as.numeric(beta_hat), gamma2Hat  = gamma2_hat,
+  coefficients = as.numeric(beta_hat)
+  names(coefficients) <- names(grad_list)
+  ans <- list(coefficients = coefficients, gamma2  = gamma2_hat,
        betaHatVariance = beta_hat_var, CI = conf_interval,
        df =   length(Y) - J,
        predicted = out_pred,
        R2 = r_square, residuals = out_res,
        lever = lever, AIC = AIC)
-  class(ans) <- "rhabit"
   return(ans)
 }
 
@@ -190,7 +191,7 @@ fit_langevin_ud <- function(formula, data,  with_speed = TRUE,
                        alpha = 0.95, leverage = FALSE) {
 #  times, ID = NULL, grad_list
   ## extract locations from the datset
-  y_name <- formula.tools::lhs(formula) %>%  as.character() %>% 
+  y_name <- formula.tools::lhs(formula) %>%  as.character() %>%
     stringr::str_subset(pattern = "[:punct:]|cbind", negate = TRUE)
   if (length(y_name) != 2) {
     stop("the LHS of the formula should have the form cbind('x','y')")
@@ -210,7 +211,7 @@ fit_langevin_ud <- function(formula, data,  with_speed = TRUE,
   ## dealing with RHS
   covar_names <- formula.tools::rhs(formula) %>% as.character()
   grad_list <- lapply (covar_names, function(n_) {
-    
+
     if ( ! paste0(n_, "_x") %in% colnames(data)) {
       stop(paste0("Missing variable ", paste0(n_,"_x"), "  in the dataset!"))
     }
@@ -222,6 +223,8 @@ fit_langevin_ud <- function(formula, data,  with_speed = TRUE,
   names(grad_list) <- covar_names
   ans <- langevinUD(locs, times, ID = NULL, grad_list, with_speed = TRUE,
                          alpha = 0.95, leverage = FALSE)
-  return(c(formula=formula, ans))
+  ans <- c(formula=formula, ans)
+  class(ans) <- c("rhabit", class(ans))
+  return(ans)
 }
 

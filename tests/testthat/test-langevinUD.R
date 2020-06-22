@@ -11,5 +11,8 @@ test_that("fit_langevin_ud", {
                "Missing variable")
   expect_error(fit_langevin_ud(cbind(x,y) ~ grad_c3, data = tracks),
                "Missing variable")
-  
+  expect_equal(unname(
+    fit_langevin_ud(cbind(x,y) ~ grad_c1, 
+                    data = tracks)$coefficients),  
+    5.417143)
 })

@@ -4,14 +4,22 @@
 \alias{print.rhabit}
 \title{Title}
 \usage{
-\method{print}{rhabit}(rhabit_obj)
+\method{print}{rhabit}(x, digits = max(3L, getOption("digits") - 3L))
 }
 \arguments{
-\item{rhabit_obj}{}
+\item{x}{a rhabit model fit using fit_langevin_ud}
+
+\item{digits}{a non-null value for digits specifies the minimum number o
+f significant digits to be printed in values.}
 }
 \value{
 
 }
 \description{
 Title
+}
+\examples{
+data(tracks)
+fitted_langevinn <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+print(fitted_langevin)
 }
