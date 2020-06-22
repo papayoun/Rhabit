@@ -7,18 +7,20 @@
 #' @param locs Matrix of observed locations (two columns: x, y)
 #' @param times Vector of times of observations
 #' @param ID Vector of track identifiers, must be of length n
-#' @param grad_array Three-dimensional array of gradients of covariate fields. 
-#' The rows index time, the columns are the dimensions (x and y), and the 
-#' layers index the covariates.
+#' @param list of gradients of covariates, evaluated at
+#' the locations of the observations, must be 3d array of dim(n, 2, J)
+#' where J is the amount of covariates
 #' 
 #' @return Negative log-likelihood
-nllkEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)
-{
+nllkEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_list) {
     n <- nrow(locs)
-    
     # multiply gradients by beta coefficients
-    gradmat <- 0.5 * gamma2 * apply(grad_array, 2, function(mat) mat %*% beta)
-    
+    nu <- .5 * beta * gamma2 
+    gradmat_list <- lapply(seq_len(length(grad_list)),  function(d_){
+        grad_list[[d_]] * nu[d_]
+    })
+    gradmat <- Reduce('+', gradmat_list)
+     
     # only one track
     if(is.null(ID))
         ID <- rep(1,nrow(locs))

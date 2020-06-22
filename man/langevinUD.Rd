@@ -8,7 +8,7 @@ langevinUD(
   locs,
   times,
   ID = NULL,
-  grad_array,
+  grad_list,
   with_speed = TRUE,
   alpha = 0.95,
   leverage = FALSE
@@ -21,7 +21,7 @@ langevinUD(
 
 \item{ID}{Vector of track identifiers, must be of length n}
 
-\item{grad_array}{Array of gradients of covariates, evaluated at
+\item{grad_list}{list of gradients of covariates, evaluated at
 the locations of the observations, must be 3d array of dim(n, 2, J)
 where J is the amount of covariates}
 
@@ -31,8 +31,8 @@ Other wise it is set to one}
 \item{alpha}{Confidence level (default: 0.95, i.e. 95\% confidence intervals)}
 
 \item{leverage}{Logical. If TRUE, the standardized residuals and the leverage
-are returned. Default: FALSE. Might not work when there are many observations,
-because it creates an n times n matrix.}
+are returned. Default: FALSE. Might not work when there are
+many observations, because it creates an n times n matrix.}
 }
 \value{
 A list of: est, the vector of estimates, and var, the

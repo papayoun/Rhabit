@@ -5,7 +5,7 @@
 \title{Akaike Information Criterion for Langevin movement model
 under Euler discretization}
 \usage{
-AICEuler(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)
+AICEuler(beta, gamma2 = 1, locs, times, ID = NULL, grad_list)
 }
 \arguments{
 \item{beta}{Parameters of the utilisation distribution}
@@ -18,9 +18,9 @@ AICEuler(beta, gamma2 = 1, locs, times, ID = NULL, grad_array)
 
 \item{ID}{Vector of track identifiers, must be of length n}
 
-\item{grad_array}{Three-dimensional array of gradients of covariate fields. 
-The rows index time, the columns are the dimensions (x and y), and the 
-layers index the covariates .}
+\item{grad_list}{list of gradients of covariates, evaluated at
+the locations of the observations, must be 3d array of dim(n, 2, J)
+where J is the amount of covariates .}
 }
 \value{
 AIC

@@ -27,6 +27,7 @@ library(viridis)
 library(ggplot2)
 library(gridExtra)
 library(abind)
+library(magrittr)
 ```
 
 
@@ -181,14 +182,16 @@ grad_array2 <- bilinearGradArray(locs, covariates)
 ```
 
 ```{r}
-langevin_result <- langevinUD(locs = locs, times = times, grad_list = grad_list)
+
+## test with the formula
+formula_langevin_result <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
 ```
 
 The estimated parameters can be obtained via 
 
 
 ```{r}
-langevin_result$betaHat
+langevin_result$coefficients
 langevin_result$gamma2Hat
 ```
 
