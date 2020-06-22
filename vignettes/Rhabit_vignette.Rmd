@@ -157,32 +157,13 @@ ggplot(ud_df, aes(x,y)) + geom_raster(aes(fill = val)) +
 
 # Estimation
 
-```{r simpleExtract, include = F}
-library(abind)
-locs <- as.matrix(tracks[, 1:2])
-times <- tracks[, "t"]
-J <- length(beta_true)
-
-grad_list <- lapply(1:J, function(j){
-                        tmp <- tracks[, (2 * (j + 1)):(2 * (j + 1) + 1)]
-                        colnames(tmp) <- c("x", "y")
-                        as.matrix(tmp)
-                      })
-names(grad_list) <- c('Var1', 'Var2')
-
-grad_array <- do.call(function(...) abind(..., along = 3),grad_list)
-```
+The dataset is expected to contain columns
+-  `x` and `y` which specify the relocations
+- `t` , for the corresponding times
+- for each variable of interest, let's say  `V1`, two columns `V1_x` and `V1_y` which contain the computed gradient of covariates V1 at the recorded location.
 
 
-```{r getCovArray, eval = F}
-locs <- as.matrix(tracks[, 1:2])
-times <- tracks[, "t"]
-grad_array <- covGradAtLocs(locs, cov_list = covariates)
-grad_array2 <- bilinearGradArray(locs, covariates)
-```
-
-```{r}
-
+```{r model_fitting}
 ## test with the formula
 fitted_langevin <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
 ```
@@ -199,12 +180,22 @@ while the speed parameter is obtained through
 speed_coef(fitted_langevin)
 ```
 
-The asymptotic covariance matrix and the corresponding Confidence interval are given in 
+# Testing thhe effects 
+
+The function \code{summary} tests for every covariate, if the corresponding parameter equals 0 or not.
+
+The Null hypothesis for the speed parameter is $\gamma^2 =0$.
 
 ```{r}
 summary(fitted_langevin)
+```
+
+
+The confidence intervals for each parameter are available with.
+```{r}
 fitted_langevin$CI
 ```
+
 
 The expected trend in the movement at each observed location is given by 
 
