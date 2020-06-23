@@ -17,6 +17,6 @@ Show the estimated speed of the Langevin model
 }
 \examples{
 data(tracks)
-fitted_langevinn <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+fitted_langevin <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
 speed_coef(fitted_langevin)
 }

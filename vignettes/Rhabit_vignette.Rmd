@@ -165,7 +165,8 @@ The dataset is expected to contain columns
 
 ```{r model_fitting}
 ## test with the formula
-fitted_langevin <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+fitted_langevin <- fit_langevin_ud(
+  cbind(x,y) ~ grad_c1 + grad_c2, data = tracks)
 ```
 
 The effects of the covariates  can be obtained via 

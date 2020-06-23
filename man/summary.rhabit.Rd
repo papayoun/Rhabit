@@ -7,17 +7,17 @@
 \method{summary}{rhabit}(object)
 }
 \arguments{
-\item{object}{an object of class rhabit, obtained through the function langevinUD}
+\item{object}{an object of class rhabit, obtained through the function fit_langevin_ud}
 }
 \value{
-the table corresponding to the test of H0 $beta_i = 0$
+the table corresponding to the test of H0 $beta_i = 0 and the table corresponding to the test H0 = "gamma2 =1"
 }
 \description{
 Obtaining the summaryof a fitted  Langevin movement model
 }
 \examples{
 data(tracks)
-fitted_langevinn <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+fitted_langevin <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
 summary(fitted_langevin)
 
 }

@@ -19,6 +19,6 @@ Extract the coefficients associated with the covariates in a rhabit moee
 }
 \examples{
 data(tracks)
-fitted_langevinn <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
+fitted_langevin <- fit_langevin_ud(cbind(x,y) ~ grad_c1, data = tracks)
 coef(fitted_langevin)
 }

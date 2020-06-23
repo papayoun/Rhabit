@@ -209,7 +209,9 @@ fit_langevin_ud <- function(formula, data,  with_speed = TRUE,
   }
   times <- data$t
   ## dealing with RHS
-  covar_names <- formula.tools::rhs(formula) %>% as.character()
+  covar_names <- formula.tools::rhs(formula) %>%
+    as.character() %>%
+    stringr::str_subset(pattern = '[[:punct:] ]+', negate = FALSE)
   grad_list <- lapply (covar_names, function(n_) {
 
     if ( ! paste0(n_, "_x") %in% colnames(data)) {
