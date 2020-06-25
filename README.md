@@ -2,15 +2,8 @@
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  fig.path = "man/figures/"
-)
-```
 
-
-# Rhabit package  <img src="man/figures/logo.png" align="right" width="155" height="180"/>
+# Rhabit package  <img src="https://raw.github.com/papayoun/Rhabit/master/vignettes/rabbit_V2.png" align="right" width="155" height="180"/>
 
 
 The Rhabit package propose to estimate classical ressource selection function from movement data using a Langevin model.
