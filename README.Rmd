@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Rhabit package  <img src="man/figures/logo.png" align="right" width="155" height="180"/>
+# Rhabit package  
 
 
 The Rhabit package propose to estimate classical ressource selection function from movement data using a Langevin model.
