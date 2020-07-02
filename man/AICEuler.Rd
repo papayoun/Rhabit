@@ -18,12 +18,12 @@ AICEuler(beta, gamma2 = 1, locs, times, ID = NULL, grad_list)
 
 \item{ID}{Vector of track identifiers, must be of length n}
 
-\item{grad_list}{list of gradients of covariates, evaluated at
+\item{grad_list}{List of gradients of covariates, evaluated at
 the locations of the observations, must be 3d array of dim(n, 2, J)
 where J is the amount of covariates .}
 }
 \value{
-AIC
+the approximated AIC using Euler discretization scheme
 }
 \description{
 Akaike Information Criterion for Langevin movement model

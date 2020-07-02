@@ -12,11 +12,11 @@
 plotUD <- function(covariates, beta, log = F){
   ud_df <- getUD(covariates, beta) %>% 
     rasterToDataFrame() 
-  ggplot(ud_df, 
-         aes(x = x, y = y)) +
-    geom_raster(aes(fill = val)) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0)) +
-    scale_fill_viridis_c() +
-    labs(fill = expression(pi(z)))
+  ggplot2::ggplot(ud_df, 
+                  ggplot2::aes(x = .data$x, y = .data$y)) +
+    ggplot2::geom_raster(ggplot2::aes(fill = .data$val)) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
+    ggplot2::scale_fill_viridis_c() +
+    ggplot2::labs(fill = expression(pi(z)))
 }

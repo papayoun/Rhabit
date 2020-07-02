@@ -7,10 +7,10 @@
 #' @param locs Matrix of observed locations (two columns: x, y)
 #' @param times Vector of times of observations
 #' @param ID Vector of track identifiers, must be of length n
-#' @param list of gradients of covariates, evaluated at
+#' @param grad_list List of gradients of covariates, evaluated at
 #' the locations of the observations, must be 3d array of dim(n, 2, J)
-#' where J is the amount of covariates
-#' 
+#' where J is the amount of covariates .
+#' @keywords internal
 #' @return Negative log-likelihood
 nllkEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_list) {
     n <- nrow(locs)

@@ -4,12 +4,14 @@
 \alias{coef.rhabit}
 \title{Extract the coefficients associated with the covariates in a rhabit model}
 \usage{
-\method{coef}{rhabit}(object, complete = TRUE)
+\method{coef}{rhabit}(object, complete = TRUE, ...)
 }
 \arguments{
 \item{object}{a rhabit model fit using fit_langevin_ud}
 
-\item{complete}{should NA be shown}
+\item{complete}{argument specifies whether  NA should be displayed or not. its value is set to TRUE by default}
+
+\item{...}{additional arguments.}
 }
 \value{
 the coefficients of the fitted rhabit  model

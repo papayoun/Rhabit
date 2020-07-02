@@ -10,7 +10,7 @@ speed_coef(x)
 \item{x}{a rhabit object obtained by fit_langevin_ud}
 }
 \value{
-
+the diffusion parameter
 }
 \description{
 Show the estimated speed of the Langevin model

@@ -13,7 +13,6 @@ simLangevinMM(
   grad_fun = NULL,
   silent = F,
   keep_grad = F,
-  cov_fun = NULL,
   b_box = NULL,
   debug = FALSE
 )

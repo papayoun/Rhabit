@@ -17,3 +17,4 @@ a boolean
 \description{
 Check if a point is in the bouding box
 }
+\keyword{internal}

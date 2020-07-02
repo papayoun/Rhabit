@@ -2,21 +2,21 @@
 % Please edit documentation in R/summary.rhabit.R
 \name{print.rhabit}
 \alias{print.rhabit}
-\title{Title}
+\title{Print the formula used to specify the model and the estimated coefficients}
 \usage{
-\method{print}{rhabit}(x, digits = max(3L, getOption("digits") - 3L))
+\method{print}{rhabit}(x, ...)
 }
 \arguments{
 \item{x}{a rhabit model fit using fit_langevin_ud}
 
-\item{digits}{a non-null value for digits specifies the minimum number o
-f significant digits to be printed in values.}
+\item{...}{additionnal arguments, might be digits a non-null value specifying the minimum number 
+of digits to be printed in values.}
 }
 \value{
-
+The rhabit object passed in argument is returned.
 }
 \description{
-Title
+Print the formula used to specify the model and the estimated coefficients
 }
 \examples{
 data(tracks)

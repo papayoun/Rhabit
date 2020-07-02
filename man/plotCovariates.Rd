@@ -7,14 +7,14 @@
 plotCovariates(covariates_list, trajectory_data = NULL)
 }
 \arguments{
-\item{trajectory_data}{An optional argument giving the trajectory data to supperpose.}
-
-\item{covariates}{covariates list, that must be a list of "raster-like"
+\item{covariates_list}{covariates list, that must be a list of "raster-like"
 elements. It is for the moment supposed that the grid is regular and
 shared by all elements of covariates}
+
+\item{trajectory_data}{An optional argument giving the trajectory data to supperpose.}
 }
 \value{
-a ggplot
+a ggplot graph
 }
 \description{
 Plotting the classical RSF UD

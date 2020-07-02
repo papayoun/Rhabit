@@ -27,7 +27,7 @@ library(viridis)
 library(ggplot2)
 library(gridExtra)
 library(abind)
-library(magrittr)
+library(dplyr)
 ```
 
 

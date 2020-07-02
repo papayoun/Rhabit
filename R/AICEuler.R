@@ -7,12 +7,14 @@
 #' @param locs Matrix of observed locations (two columns: x, y)
 #' @param times Vector of times of observations
 #' @param ID Vector of track identifiers, must be of length n
-#' @param grad_list list of gradients of covariates, evaluated at
+#' @param grad_list List of gradients of covariates, evaluated at
 #' the locations of the observations, must be 3d array of dim(n, 2, J)
 #' where J is the amount of covariates .
 #' 
 #' 
-#' @return AIC
+#' @return the approximated AIC using Euler discretization scheme
+#' 
+#' @export
 AICEuler <- function(beta, gamma2 = 1, locs, times, ID = NULL, grad_list)
 {
     # Number of parameters to estimate

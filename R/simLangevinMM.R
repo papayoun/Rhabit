@@ -26,7 +26,7 @@
 #' @export
 simLangevinMM <- function(beta, gamma2 = 1, times, loc0,
                           cov_list = NULL, grad_fun = NULL, silent = F, 
-                          keep_grad = F, cov_fun = NULL, b_box = NULL, debug = FALSE) {
+                          keep_grad = F, b_box = NULL, debug = FALSE) {
   checkCovGrad(cov_list, grad_fun)
   nb_obs <- length(times)
   if(debug){
