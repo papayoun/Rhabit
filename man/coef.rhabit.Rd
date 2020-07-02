@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.rhabit.R
 \name{coef.rhabit}
 \alias{coef.rhabit}
-\title{Extract the coefficients associated with the covariates in a rhabit moee}
+\title{Extract the coefficients associated with the covariates in a rhabit model}
 \usage{
 \method{coef}{rhabit}(object, complete = TRUE)
 }
@@ -15,7 +15,7 @@
 the coefficients of the fitted rhabit  model
 }
 \description{
-Extract the coefficients associated with the covariates in a rhabit moee
+Extract the coefficients associated with the covariates in a rhabit model
 }
 \examples{
 data(tracks)

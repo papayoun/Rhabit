@@ -1,7 +1,8 @@
-#' Obtaining the summaryof a fitted  Langevin movement model
+#' Obtaining the summary of a fitted  Langevin movement model
 #'
 #' @name summary.rhabit
 #' @param object an object of class rhabit, obtained through the function fit_langevin_ud
+#'
 #'
 #' @return the table corresponding to the test of H0 $beta_i = 0 and the table corresponding to the test H0 = "gamma2 =1"
 #'
@@ -58,7 +59,7 @@ speed_coef <- function(x){
   x$gamma2
 }
 
-#' Extract the coefficients associated with the covariates in a rhabit moee
+#' Extract the coefficients associated with the covariates in a rhabit model
 #'
 #' @param object a rhabit model fit using fit_langevin_ud
 #' @param complete  should NA be shown

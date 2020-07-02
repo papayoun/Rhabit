@@ -183,6 +183,7 @@ langevinUD <- function(locs, times, ID = NULL, grad_list, with_speed = TRUE,
 #' are returned. Default: FALSE. Might not work when there are many
 #'  observations,  because it creates an n times n matrix.
 #'
+#' @importFrom dplyr %>%
 #' @return A list of: est, the vector of estimates, and var, the
 #' covariance matrix of the estimates.
 #'

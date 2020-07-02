@@ -15,6 +15,6 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
 Depends: R (>= 3.1.0)
-Imports: abind, fields, formula.tools, ggplot2, nloptr, RandomFields, viridis, raster, sp, stats, utils
+Imports: abind, dplyr, fields, formula.tools, ggplot2, nloptr, purrr, RandomFields, raster, sp, stats, stringr, tibble, utils, viridis
 Suggests: knitr, gridExtra, testthat, rmarkdown
 VignetteBuilder: knitr

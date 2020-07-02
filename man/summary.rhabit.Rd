@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.rhabit.R
 \name{summary.rhabit}
 \alias{summary.rhabit}
-\title{Obtaining the summaryof a fitted  Langevin movement model}
+\title{Obtaining the summary of a fitted  Langevin movement model}
 \usage{
 \method{summary}{rhabit}(object)
 }
@@ -13,7 +13,7 @@
 the table corresponding to the test of H0 $beta_i = 0 and the table corresponding to the test H0 = "gamma2 =1"
 }
 \description{
-Obtaining the summaryof a fitted  Langevin movement model
+Obtaining the summary of a fitted  Langevin movement model
 }
 \examples{
 data(tracks)
