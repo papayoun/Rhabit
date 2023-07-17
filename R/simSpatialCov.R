@@ -23,14 +23,19 @@ simSpatialCov <- function(lim, nu, rho, sigma2, resol = 1,
       return(0)
     }
   }
+  
   xgrid <- seq(lim[1], lim[2], by = resol)
   ygrid <- seq(lim[3], lim[4], by = resol)
   coords <- as.matrix(expand.grid(xgrid, ygrid))
-  model <- RandomFields::RMmatern(nu = nu, var = sigma2, scale = rho)
-  simu <- RandomFields::RFsimulate(model, x = coords[, 1],
-                                   y = coords[, 2])
-  means <- apply(coords, 1, mean_function)
-  vals <- means + simu[[1]]
+  
+  simu <- geoR::grf( grid = coords,  cov.pars = c(sigma2, rho), kappa = nu)
+  
+  if(!is.null(mean_function)){
+    means <- apply(coords, 1, mean_function)
+  } else {
+    means <- 0
+  }
+  vals <- means + simu$data
   vals <- vals - min(vals)
   if (raster_like){
     return(list(x = xgrid, y = ygrid, z = matrix(vals, nrow = length(xgrid))))
